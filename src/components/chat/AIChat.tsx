@@ -29,7 +29,12 @@ export default function AIChat() {
 
     try {
       const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
-      const newAiMessage: O1MessagesInput = { role: 'assistant', content: aiResponse }
+      if (aiResponse.contentType === 'quiz') {
+        const newAiMessage: O1MessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: 'quiz' }
+        setMessages(prevMessages => [...prevMessages, newAiMessage])
+        return
+      }
+      const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content }
       setMessages(prevMessages => [...prevMessages, newAiMessage])
     } catch (error) {
       console.error('Error generating AI response:', error)
