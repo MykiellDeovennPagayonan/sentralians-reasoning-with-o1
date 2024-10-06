@@ -4,8 +4,13 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+const apiKey = process.env.AIML_API_KEY;
+
+const baseURL = "https://api.aimlapi.com/v1";
+
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey,
+  baseURL,
 });
 
 export default async function getGPT4oResponse(messages : ChatCompletionMessageParam[]) : Promise<string> {

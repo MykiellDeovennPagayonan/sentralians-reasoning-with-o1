@@ -41,7 +41,7 @@ export default function AIChat() {
   
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-full mx-auto">
+    <div className="flex flex-col w-full max-w-3xl h-full mx-auto px-4">
       <AIChatMessages messages={messages} />
       <form onSubmit={handleSubmit} className="p-4 bg-white border-2 border-black border-b-0 rounded-t-lg">
         <div className="flex space-x-2">
