@@ -1,7 +1,7 @@
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { O1MessagesInput } from "@/lib/types";
+import { O1MessagesInput, AIResponse } from "@/lib/types";
 
-export default async function fetchGenerateAIResponse(messages: (ChatCompletionMessageParam | O1MessagesInput)[]): Promise<string> {
+export default async function fetchGenerateAIResponse(messages: (ChatCompletionMessageParam | O1MessagesInput)[]): Promise<AIResponse> {
   console.log("1")
   try {
     const response = await fetch('/api/generate-ai-response', {
@@ -17,7 +17,12 @@ export default async function fetchGenerateAIResponse(messages: (ChatCompletionM
     }
 
     const data = await response.json();
-    return data.message;
+    console.log(data)
+    if (data.contentType === "quiz") {
+      console.log("this is a quiz")
+      return {content: data.content, contentType: "quiz"};
+    }
+    return {content: data.content};
   } catch (error) {
     console.error('Error calling AI response API:', error);
     throw error;

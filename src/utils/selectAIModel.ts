@@ -5,13 +5,15 @@ export default function selectAIModel(messageInput: GPT4oMessagesInput[] | O1Mes
       throw new Error("Message input array is empty");
   }
 
-  const firstMessage = messageInput[0];
+  return "gpt-4o";
 
-  if ('content' in firstMessage && Array.isArray(firstMessage.content)) {
-      return "gpt-4o";
-  } else if ('content' in firstMessage && typeof firstMessage.content === 'string') {
-      return "o1";
-  } else {
-      throw new Error("Invalid message input format");
-  }
+//   const firstMessage = messageInput[0];
+
+//   if ('content' in firstMessage && Array.isArray(firstMessage.content)) {
+//       return "gpt-4o";
+//   } else if ('content' in firstMessage && typeof firstMessage.content === 'string') {
+//       return "o1";
+//   } else {
+//       throw new Error("Invalid message input format");
+//   }
 }

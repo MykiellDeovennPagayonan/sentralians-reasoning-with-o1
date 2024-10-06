@@ -3,9 +3,9 @@ import getGPT4oResponse from "./getGPT4oResponse";
 import getO1Response from "./getO1Response";
 import selectAIModel from "./selectAIModel";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { O1MessagesInput } from "@/lib/types";
+import { O1MessagesInput, AIResponse } from "@/lib/types";
 
-export default async function generateAIResponse(messageInput: ChatCompletionMessageParam[] | O1MessagesInput[]): Promise<string> {
+export default async function generateAIResponse(messageInput: ChatCompletionMessageParam[] | O1MessagesInput[]): Promise<AIResponse> {
   const selectedModel = selectAIModel(messageInput);
 
   try {

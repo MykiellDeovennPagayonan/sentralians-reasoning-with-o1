@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  system
+  user
+  assistant
+}
+
+enum ContentType {
+  text
+  image_url
+}
+
+model Chat {
+  chatSessionId String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String
+  messages      Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  role    Role
+  content Content[]
+
+  chat          Chat   @relation(fields: [chatSessionId], references: [chatSessionId])
+  chatSessionId String @db.ObjectId
+
+  @@map("messages")
+}
+
+model Content {
+  id       String      @id @default(auto()) @map("_id") @db.ObjectId
+  type     ContentType
+  text     String?
+  imageUrl ImageUrl?
+
+  message   Message @relation(fields: [messageId], references: [id])
+  messageId String  @db.ObjectId
+
+  @@map("contents")
+}
+
+model ImageUrl {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  url       String
+
+  content   Content @relation(fields: [contentId], references: [id])
+  contentId String  @unique @db.ObjectId
+
+  @@map("image_urls")
+}

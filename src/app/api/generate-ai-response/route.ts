@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import generateAIResponse from '@/utils/generateAIResponse';
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { O1MessagesInput } from "@/lib/types";
+import { O1MessagesInput, AIResponse } from "@/lib/types";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const messages: ChatCompletionMessageParam[] | O1MessagesInput[] = body.messages;
 
-    console.log(messages)
-
     const response = await generateAIResponse(messages);
 
-    return NextResponse.json({ message: response }, { status: 200 });
+    console.log(response)
+
+    if (response.contentType === "quiz") {
+      return NextResponse.json({ content: response.content, contentType: "quiz" } as AIResponse, { status: 200 });
+    }
+
+    return NextResponse.json({ content: response.content } as AIResponse, { status: 200 });
   } catch (error) {
     console.error("Error generating AI response:", error);
     return NextResponse.json({ error: 'Failed to generate AI response' }, { status: 500 });
