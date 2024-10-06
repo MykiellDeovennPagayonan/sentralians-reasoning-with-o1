@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import { OpenAI } from "openai";
-import { O1MessagesInput } from "@/lib/types";
+import { O1MessagesInput, AIResponse } from "@/lib/types";
 
 dotenv.config({ path: ".env" });
 
@@ -13,7 +13,7 @@ const openai = new OpenAI({
   baseURL,
 });
 
-export default async function getO1Response(messages : O1MessagesInput[]) : Promise<string>  {
+export default async function getO1Response(messages : O1MessagesInput[]) : Promise<AIResponse>  {
   const response = await openai.chat.completions.create({
     model: "o1-mini",
     messages: messages,
@@ -22,5 +22,5 @@ export default async function getO1Response(messages : O1MessagesInput[]) : Prom
     top_p: 1,
   });
 
-  return (response.choices[0].message.content as string);
+  return {content: response.choices[0].message.content as string}
 }
