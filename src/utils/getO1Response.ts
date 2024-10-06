@@ -13,11 +13,14 @@ const openai = new OpenAI({
   baseURL,
 });
 
-export default async function getO1Response(messages : O1MessagesInput[]) {
+export default async function getO1Response(messages : O1MessagesInput[]) : Promise<string>  {
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "o1-mini",
     messages: messages,
+    temperature: 1,
+    max_tokens: 12010,
+    top_p: 1,
   });
 
-  return response
+  return (response.choices[0].message.content as string);
 }

@@ -1,0 +1,63 @@
+'use client'
+
+import { SendIcon } from 'lucide-react'
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { GPT4oMessagesInput, O1MessagesInput } from '@/lib/types'
+import AIChatMessages from './AIChatMessages'
+import fetchGenerateAIResponse from '@/utils/fetchGenerateAIResponse'
+
+export default function AIChat() {
+  const [messages, setMessages] = useState<(GPT4oMessagesInput | O1MessagesInput)[]>([])
+  const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setInput(event.target.value)
+  }
+
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    if (!input.trim() || isLoading) return
+
+    const newUserMessage: O1MessagesInput = { role: 'user', content: input.trim() }
+    setMessages(prevMessages => [...prevMessages, newUserMessage])
+    setInput('')
+    setIsLoading(true)
+
+    try {
+      const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
+      const newAiMessage: O1MessagesInput = { role: 'assistant', content: aiResponse }
+      setMessages(prevMessages => [...prevMessages, newAiMessage])
+    } catch (error) {
+      console.error('Error generating AI response:', error)
+      setMessages(prevMessages => [...prevMessages, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
+
+  return (
+    <div className="flex flex-col w-full max-w-3xl h-full mx-auto">
+      <AIChatMessages messages={messages} />
+      <form onSubmit={handleSubmit} className="p-4 bg-white border-2 border-black border-b-0 rounded-t-lg">
+        <div className="flex space-x-2">
+          <Input
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Type your message here..."
+            className="flex-grow"
+            disabled={isLoading}
+          />
+          <Button type="submit" disabled={isLoading}>
+            <SendIcon className="h-4 w-4" />
+            <span className="sr-only">Send</span>
+          </Button>
+        </div>
+      </form>
+    </div>
+  )
+}
