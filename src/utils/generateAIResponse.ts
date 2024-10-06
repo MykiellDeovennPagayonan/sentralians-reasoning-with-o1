@@ -5,7 +5,7 @@ import selectAIModel from "./selectAIModel";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { O1MessagesInput } from "@/lib/types";
 
-export default async function generateAIResponse(messageInput: ChatCompletionMessageParam[] | O1MessagesInput[]): Promise<any> {
+export default async function generateAIResponse(messageInput: ChatCompletionMessageParam[] | O1MessagesInput[]): Promise<string> {
   const selectedModel = selectAIModel(messageInput);
 
   try {
