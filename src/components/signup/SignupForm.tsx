@@ -10,6 +10,8 @@ export default function SignupForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/"; // this is the url to redirect to after signing up
 
+  console.log(callbackUrl, 'redirect url')
+
   return (
     <form className="space-y-4">
       <div>
