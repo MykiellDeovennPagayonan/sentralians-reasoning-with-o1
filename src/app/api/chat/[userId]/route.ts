@@ -3,6 +3,7 @@ import { Chat, Content, Message } from "@prisma/client";
 
 // gets all chats for a user
 export async function GET(
+  request: Request,
   { params }: { params: { userId: string } }
 ) {
   try {

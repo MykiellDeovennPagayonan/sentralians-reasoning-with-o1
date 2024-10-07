@@ -5,6 +5,7 @@ const prisma = new PrismaClient()
 // gets the chat for the user with a specific session id
 // (this is the chat that the user is currently in)
 export async function GET(
+  request: Request,
   { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
