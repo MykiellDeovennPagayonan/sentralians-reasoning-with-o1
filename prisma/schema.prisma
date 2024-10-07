@@ -19,11 +19,6 @@ enum Role {
   assistant
 }
 
-enum ContentType {
-  text
-  image_url
-}
-
 model Chat {
   chatSessionId String    @id @default(auto()) @map("_id") @db.ObjectId
   userId        String
@@ -36,6 +31,7 @@ model Message {
   id      String    @id @default(auto()) @map("_id") @db.ObjectId
   role    Role
   content Content[]
+  messageType   String ?
 
   chat          Chat   @relation(fields: [chatSessionId], references: [chatSessionId])
   chatSessionId String @db.ObjectId
@@ -45,22 +41,11 @@ model Message {
 
 model Content {
   id       String      @id @default(auto()) @map("_id") @db.ObjectId
-  type     ContentType
+  contentType     String
   text     String?
-  imageUrl ImageUrl?
 
   message   Message @relation(fields: [messageId], references: [id])
   messageId String  @db.ObjectId
 
   @@map("contents")
-}
-
-model ImageUrl {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  url       String
-
-  content   Content @relation(fields: [contentId], references: [id])
-  contentId String  @unique @db.ObjectId
-
-  @@map("image_urls")
 }
