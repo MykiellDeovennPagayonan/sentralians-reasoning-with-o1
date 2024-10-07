@@ -3,17 +3,9 @@ import { Chat, Content, Message } from "@prisma/client";
 
 // gets all chats for a user
 export async function GET(
-  // request: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
-    // const response: Chat = await request.json()
-
-    // // additional security for unauthorized gets
-    // if (response.userId !== params.userId) {
-    //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
-    // }
-
     const chats = await prisma.chat.findMany({
       where: {
         userId: params.userId
