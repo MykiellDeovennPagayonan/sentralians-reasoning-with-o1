@@ -5,16 +5,16 @@ const prisma = new PrismaClient()
 // gets the chat for the user with a specific session id
 // (this is the chat that the user is currently in)
 export async function GET(
-  request: Request,
+  // request: Request,
   { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
-    const response: Chat = await request.json()
+    // const response: Chat = await request.json()
 
-    // additional security for unauthorized gets
-    if (response.userId !== params.userId) {
-      return Response.json({ message: 'Unauthorized' }, { status: 401 })
-    }
+    // // additional security for unauthorized gets
+    // if (response.userId !== params.userId) {
+    //   return Response.json({ message: 'Unauthorized' }, { status: 401 })
+    // }
 
     const chats = await prisma.chat.findUnique({
       where: {
