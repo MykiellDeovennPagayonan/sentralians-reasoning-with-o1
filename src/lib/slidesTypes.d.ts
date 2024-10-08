@@ -14,41 +14,34 @@ interface HeaderSubheaderSlide extends BaseSlide {
   type: "Header & Subheader Slide";
   title: string;
   subtitle: string;
-  logo?: string;
 }
 
 interface EnumerationSlide extends BaseSlide {
   type: "Enumeration Slide";
   title: string;
   bullets: string[];
-  icons?: string[];
 }
 
 interface DefinitionSlide extends BaseSlide {
   type: "Definition Slide";
   term: string;
   definition: string;
-  icon?: string;
 }
 
 interface ParagraphSlide extends BaseSlide {
   type: "Paragraph Slide";
-  title: string;
   paragraph: string;
-  backgroundImage?: string;
 }
 
 interface Milestone {
   eventTitle: string;
   date: string;
   description: string;
-  icon?: string;
 }
 
 interface ComparisonItem {
   header: string;
   points: string[];
-  icon?: string;
 }
 
 interface ComparisonSlide extends BaseSlide {
@@ -77,7 +70,7 @@ export {
   DefinitionSlide,
   ParagraphSlide,
   Milestone,
-  TimelineSlide,
+  // TimelineSlide,
   ComparisonItem,
   ComparisonSlide,
   Slide,

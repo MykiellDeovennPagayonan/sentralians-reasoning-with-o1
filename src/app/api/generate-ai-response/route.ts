@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
 
     console.log(response)
 
-    if (response.contentType === "quiz") {
-      return NextResponse.json({ content: response.content, contentType: "quiz" } as AIResponse, { status: 200 });
+    if (response.contentType === "quiz" || response.contentType === "ppt") {
+      return NextResponse.json({ content: response.content, contentType: response.contentType } as AIResponse, { status: 200 });
     }
 
     return NextResponse.json({ content: response.content } as AIResponse, { status: 200 });

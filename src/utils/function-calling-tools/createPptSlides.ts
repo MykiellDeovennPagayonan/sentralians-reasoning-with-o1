@@ -40,10 +40,6 @@ const createPptSlides : ChatCompletionTool = {
                       subtitle: {
                         type: "string",
                         description: "The subtitle or supporting text for the slide."
-                      },
-                      logo: {
-                        type: "string",
-                        description: "URL or path to the logo or visual element."
                       }
                     },
                     required: ["title", "subtitle"],
@@ -65,13 +61,6 @@ const createPptSlides : ChatCompletionTool = {
                         },
                         minItems: 3,
                         maxItems: 5
-                      },
-                      icons: {
-                        type: "array",
-                        description: "Optional array of icons corresponding to each bullet point.",
-                        items: {
-                          type: "string"
-                        }
                       }
                     },
                     required: ["title", "bullets"],
@@ -88,10 +77,6 @@ const createPptSlides : ChatCompletionTool = {
                       definition: {
                         type: "string",
                         description: "The definition or explanation of the term."
-                      },
-                      icon: {
-                        type: "string",
-                        description: "URL or path to an icon or illustration related to the term."
                       }
                     },
                     required: ["term", "definition"],
@@ -101,19 +86,11 @@ const createPptSlides : ChatCompletionTool = {
                     // Paragraph Slide
                     properties: {
                       type: { const: "Paragraph Slide" },
-                      title: {
-                        type: "string",
-                        description: "The title of the slide."
-                      },
                       paragraph: {
                         type: "string",
                         description: "The paragraph text (maximum 700 characters).",
                         maxLength: 700
                       },
-                      backgroundImage: {
-                        type: "string",
-                        description: "URL or path to the background image."
-                      }
                     },
                     required: ["title", "paragraph"],
                     additionalProperties: false
@@ -143,10 +120,6 @@ const createPptSlides : ChatCompletionTool = {
                                 type: "string"
                               }
                             },
-                            icon: {
-                              type: "string",
-                              description: "URL or path to an icon representing the item."
-                            }
                           },
                           required: ["header", "points"],
                           additionalProperties: false

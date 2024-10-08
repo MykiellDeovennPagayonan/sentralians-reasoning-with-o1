@@ -8,7 +8,7 @@ interface DefinitionSlideProps {
 
 const DefinitionSlide: React.FC<DefinitionSlideProps> = ({ term, definition, icon }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-gray-800 p-8">
+    <div className="flex flex-col items-center justify-center h-full bg-gray-50 text-gray-800 p-8">
       {icon && (
         <img src={icon} alt="Term Icon" className="mb-6 w-16 h-16 object-contain" />
       )}
