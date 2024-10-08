@@ -1,5 +1,6 @@
 import { Message, Content } from '@prisma/client'
 import prisma from '@/lib/db';
+import { NextResponse } from 'next/server';
 
 // the chat already exists, and the user sends more messages into the chat
 // or the assistant replies to the user
@@ -28,25 +29,32 @@ export async function POST(
   { params }: { params: { chatSessionId: string } }
 ) {
   try {
-    const response: Message & { content: Content[] } = await request.json();
+    const body: Message & { content: Content[] } = await request.json();
 
-    await prisma.message.create({
+    await prisma.chat.update({
+      where: {
+        chatSessionId: params.chatSessionId
+      },
       data: {
-        role: response.role,
-        chatSessionId: params.chatSessionId,
-        content: {
-          createMany: {
-            data: response.content.map((content) => {
-              return {
-                contentType: content.contentType,
-                text: content.text
+        messages: {
+          create: {
+            role: body.role,
+            content: {
+              createMany: {
+                data: body.content.map((content) => {
+                  return {
+                    contentType: content.contentType,
+                    text: content.text
+                  }
+                })
               }
-            })
+            }
           }
         }
       }
+
     })
   } catch (error) {
-    return Response.json({ message: error }, { status: 500 })
+    return NextResponse.json({ message: error }, { status: 500 })
   }
 }

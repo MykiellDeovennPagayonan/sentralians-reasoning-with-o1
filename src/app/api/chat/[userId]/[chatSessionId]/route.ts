@@ -1,4 +1,5 @@
 import { Chat, PrismaClient } from '@prisma/client'
+import { NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
 
@@ -22,9 +23,9 @@ export async function GET(
       }
     })
 
-    return Response.json(chats)
+    return NextResponse.json(chats)
   } catch (error) {
-    return Response.json({ message: error }, { status: 500 })
+    return NextResponse.json({ message: error }, { status: 500 })
   }
 }
 
@@ -35,11 +36,11 @@ export async function PUT(
   { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
-    const response: Chat = await request.json()
+    const body: Chat = await request.json()
 
     // additional security for unauthorized updates
-    if (response.userId !== params.userId) {
-      return Response.json({ message: 'Unauthorized' }, { status: 401 })
+    if (body.userId !== params.userId) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     await prisma.chat.update({
@@ -47,13 +48,13 @@ export async function PUT(
         chatSessionId: params.chatSessionId
       },
       data: {
-        chatName: response.chatName
+        chatName: body.chatName
       }
     })
 
-    return Response.json({ message: 'Chat name updated' })
+    return NextResponse.json({ message: 'Chat name updated' })
   } catch (error) {
-    return Response.json({ message: error }, { status: 500 })
+    return NextResponse.json({ message: error }, { status: 500 })
   }
 }
 
@@ -65,11 +66,11 @@ export async function DELETE(
   { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
-    const response: Chat = await request.json()
+    const body: Chat = await request.json()
 
     // additional security for unauthorized deletes
-    if (response.userId !== params.userId) {
-      return Response.json({ message: 'Unauthorized' }, { status: 401 })
+    if (body.userId !== params.userId) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     await prisma.chat.delete({
@@ -78,8 +79,8 @@ export async function DELETE(
       }
     })
 
-    return Response.json({ message: 'Chat deleted' })
+    return NextResponse.json({ message: 'Chat deleted' })
   } catch (error) {
-    return Response.json({ message: error }, { status: 500 })
+    return NextResponse.json({ message: error }, { status: 500 })
   }
 }

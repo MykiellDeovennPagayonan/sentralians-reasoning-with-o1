@@ -1,5 +1,6 @@
 import prisma from "@/lib/db"
 import { Chat, Content, Message } from "@prisma/client";
+import { NextResponse } from "next/server";
 
 // gets all chats for a user
 export async function GET(
@@ -13,9 +14,9 @@ export async function GET(
       }
     })
 
-    return Response.json(chats)
+    return NextResponse.json(chats)
   } catch (error) {
-    return Response.json({ message: error }, { status: 500 })
+    return NextResponse.json({ message: error }, { status: 500 })
   }
 }
 
@@ -74,11 +75,11 @@ export async function POST(
   { params }: { params: { userId: string } }
 ) {
   try {
-    const response: Chat & (Message & { content: Content[] })[] = await request.json();
+    const body: Chat & (Message & { content: Content[] })[] = await request.json();
 
     // securtiy for unauthorized users
-    if (response.userId !== params.userId) {
-      return Response.json({ message: "userId in the request body does not match the userId in the URL" }, { status: 400 })
+    if (body.userId !== params.userId) {
+      return NextResponse.json({ message: "userId in the request body does not match the userId in the URL" }, { status: 400 })
     }
 
     // still unsure how to handle the chatname yet.
@@ -87,10 +88,10 @@ export async function POST(
     await prisma.chat.create({
       data: {
         userId: params.userId,
-        chatName: response.chatName,
+        chatName: body.chatName,
         messages: {
           createMany: {
-            data: response.map((message) => {
+            data: body.map((message) => {
               return {
                 role: message.role,
                 messageType: message.messageType,
@@ -111,6 +112,6 @@ export async function POST(
       }
     })
   } catch (error) {
-    return Response.json({ message: error }, { status: 500 })
+    return NextResponse.json({ message: error }, { status: 500 })
   }
 }
