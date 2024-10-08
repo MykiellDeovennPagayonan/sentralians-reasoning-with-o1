@@ -11,12 +11,12 @@ export type Question = {
 };
 
 export type GPT4oMessagesInput = ChatCompletionMessageParam & {
-  componentMessageType?: "quiz";
+  componentMessageType?: "quiz" | "ppt";
 };
 
 export type AIResponse = {
   content: string;
-  contentType?: "quiz"; 
+  contentType?: "quiz" | "ppt"; 
 }
 
 export type O1MessagesInput = {

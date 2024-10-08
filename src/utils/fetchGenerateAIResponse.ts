@@ -18,9 +18,8 @@ export default async function fetchGenerateAIResponse(messages: (ChatCompletionM
 
     const data = await response.json();
     console.log(data)
-    if (data.contentType === "quiz") {
-      console.log("this is a quiz")
-      return {content: data.content, contentType: "quiz"};
+    if (data.contentType) {
+      return {content: data.content, contentType: data.contentType};
     }
     return {content: data.content};
   } catch (error) {

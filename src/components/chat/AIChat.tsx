@@ -29,8 +29,8 @@ export default function AIChat() {
 
     try {
       const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
-      if (aiResponse.contentType === 'quiz') {
-        const newAiMessage: O1MessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: 'quiz' }
+      if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt') {
+        const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }
         setMessages(prevMessages => [...prevMessages, newAiMessage])
         return
       }
