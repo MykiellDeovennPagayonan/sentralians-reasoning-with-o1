@@ -1,5 +1,5 @@
 import prisma from "@/lib/db"
-import { Chat, Content, Message } from "@prisma/client";
+import { Chat } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 // gets all chats for a user
@@ -20,10 +20,7 @@ export async function GET(
   }
 }
 
-// user types something, sends it.
-// chat is created, messages are added.
-// triggered when the user presses enter on their initial message
-// (same flow as creating a new chat with chatgpt)
+// creates a new chat
 
 // fetch structure for the post method would look like:
 // const response = await fetch('/api/chat/<userid>', {
@@ -33,84 +30,33 @@ export async function GET(
 //   },
 //   body: JSON.stringify({
 //     chatName: "pizza quiz",
-//     messages: [
-//       {
-//         "role": "system",
-//         "content": [
-//           {
-//             "type": "text",
-//             "text": "you bring up pizzas at every conversation"
-//           }
-//         ]
-//       },
-//       {
-//         "role": "user",
-//         "content": [
-//           {
-//             "type": "text",
-//             "text": "<image link here>"
-//           },
-//           {
-//             "type": "text",
-//             "text": "im bored, quiz me on pizzas\n"
-//           }
-//         ]
-//       },    
-//       {
-//         role: "assistant",
-//         messageType: "quiz",
-//         content: [
-//           {
-//             type: "quiz",
-//             text: "What is the capital of pizza?"
-//           }
-//         ]
-//       }
-//     ]
 //   }),
 // });
+//
+// const data = await response.json();
+// const chatSessionId = data.chatSessionId; // gets the session id
+// you can use this session id to call the API for appending new messages to chat
 
 export async function POST(
   request: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
-    const body: Chat & (Message & { content: Content[] })[] = await request.json();
-
-    // securtiy for unauthorized users
-    if (body.userId !== params.userId) {
-      return NextResponse.json({ message: "userId in the request body does not match the userId in the URL" }, { status: 400 })
-    }
+    const body: Chat = await request.json();
 
     // still unsure how to handle the chatname yet.
     // im thinking of automatically generated chat names when you create a chat
     // just like chatgpt. tho i dunno how it is implemented.
-    await prisma.chat.create({
+    const newChat = await prisma.chat.create({
       data: {
-        userId: params.userId,
         chatName: body.chatName,
-        messages: {
-          createMany: {
-            data: body.map((message) => {
-              return {
-                role: message.role,
-                messageType: message.messageType,
-                content: {
-                  createMany: {
-                    data: message.content.map((content) => {
-                      return {
-                        type: content.contentType,
-                        text: content.text
-                      }
-                    })
-                  }
-                }
-              }
-            })
-          }
-        }
-      }
+        userId: params.userId
+      },
     })
+
+    // returns chatsession id from the newly created chat.
+    // the session id will be used to append messages to the chat.
+    return NextResponse.json({ chatSessionId: newChat.chatSessionId }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 })
   }

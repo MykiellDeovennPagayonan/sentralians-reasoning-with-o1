@@ -30,7 +30,7 @@ export async function GET(
 }
 
 // user updates chat name
-
+// body should contain the new chat name
 export async function PUT(
   request: Request,
   { params }: { params: { userId: string, chatSessionId: string } }
@@ -38,9 +38,14 @@ export async function PUT(
   try {
     const body: Chat = await request.json()
 
-    // additional security for unauthorized updates
-    if (body.userId !== params.userId) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    const chat = await prisma.chat.findUnique({
+      where: {
+        chatSessionId: params.chatSessionId
+      }
+    });
+
+    if (!chat || chat.userId !== params.userId) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     await prisma.chat.update({
@@ -52,7 +57,7 @@ export async function PUT(
       }
     })
 
-    return NextResponse.json({ message: 'Chat name updated' })
+    return NextResponse.json({ message: 'Chat name updated' }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 })
   }
@@ -66,11 +71,14 @@ export async function DELETE(
   { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
-    const body: Chat = await request.json()
+    const chat = await prisma.chat.findUnique({
+      where: {
+        chatSessionId: params.chatSessionId
+      }
+    });
 
-    // additional security for unauthorized deletes
-    if (body.userId !== params.userId) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    if (!chat || chat.userId !== params.userId) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
     await prisma.chat.delete({
@@ -79,7 +87,7 @@ export async function DELETE(
       }
     })
 
-    return NextResponse.json({ message: 'Chat deleted' })
+    return NextResponse.json({ message: 'Chat deleted' }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 })
   }

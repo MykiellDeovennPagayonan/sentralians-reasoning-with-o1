@@ -26,7 +26,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   request: Request,
-  { params }: { params: { chatSessionId: string } }
+  { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
     const body: Message & { content: Content[] } = await request.json();
@@ -52,8 +52,9 @@ export async function POST(
           }
         }
       }
-
     })
+
+    return NextResponse.json({ message: 'Message sent' }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 })
   }
