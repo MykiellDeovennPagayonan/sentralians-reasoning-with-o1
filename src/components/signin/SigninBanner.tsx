@@ -25,7 +25,7 @@ export default function SignInBanner() {
             <div className="w-12 h-16 bg-yellow-200 rounded-lg"></div>
           </div>
           <h3 className="text-xl font-semibold text-gray-800">
-            Manage your task in a easy and more efficient way with Tasky...
+            Learn in a easy and more efficient way with Appname...
           </h3>
           <div className="flex justify-center space-x-2">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
