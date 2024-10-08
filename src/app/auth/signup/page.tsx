@@ -50,7 +50,7 @@ export default function RegisterPage() {
         </div>
         <p className="mt-8 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <a href="#" className="font-medium text-blue-600 hover:underline">
+          <a href={`signin?callbackUrl=${callbackUrl}`} className="font-medium text-blue-600 hover:underline">
             Sign In
           </a>
         </p>

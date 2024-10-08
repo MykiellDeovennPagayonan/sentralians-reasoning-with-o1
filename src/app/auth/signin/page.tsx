@@ -51,7 +51,7 @@ export default function LoginPage() {
         </div>
         <p className="mt-8 text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <a href="#" className="font-medium text-blue-600 hover:underline">
+          <a href={`signup?callbackUrl=${callbackUrl}`} className="font-medium text-blue-600 hover:underline">
             Sign Up
           </a>
         </p>
