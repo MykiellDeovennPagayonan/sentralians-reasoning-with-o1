@@ -12,12 +12,6 @@ const generateFileName = (bytes = 32) =>
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const multerPromise = (req: NextRequest, res: NextResponse) =>
   new Promise<void>((resolve, reject) => {
     upload.single('image')(req as any, res as any, (err: any) => {

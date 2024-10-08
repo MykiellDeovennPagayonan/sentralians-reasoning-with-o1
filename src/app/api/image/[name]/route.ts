@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getObjectSignedUrl } from '@/utils/s3Bucket'; 
-import { useParams } from "next/navigation"
 
 function isValidUrl(url : string) {
   try {
@@ -11,9 +10,8 @@ function isValidUrl(url : string) {
   }
 }
 
-export async function GET() {
-  const { name } = useParams()
-  // const { name } = req.params;
+export async function GET(req: Request, { params }: { params: { name: string } }) {
+  const { name } = params
 
   if (!name) {
     return NextResponse.json({ error: "Missing 'name' parameter" }, { status: 400 });
