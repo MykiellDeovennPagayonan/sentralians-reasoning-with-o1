@@ -21,6 +21,7 @@ enum Role {
 
 model Chat {
   chatSessionId String    @id @default(auto()) @map("_id") @db.ObjectId
+  chatName      String
   userId        String
   messages      Message[]
 
@@ -28,10 +29,10 @@ model Chat {
 }
 
 model Message {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  role    Role
-  content Content[]
-  messageType   String ?
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  role        Role
+  content     Content[]
+  messageType String?
 
   chat          Chat   @relation(fields: [chatSessionId], references: [chatSessionId])
   chatSessionId String @db.ObjectId
@@ -40,9 +41,9 @@ model Message {
 }
 
 model Content {
-  id       String      @id @default(auto()) @map("_id") @db.ObjectId
-  contentType     String
-  text     String?
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  contentType String
+  text        String?
 
   message   Message @relation(fields: [messageId], references: [id])
   messageId String  @db.ObjectId
