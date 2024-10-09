@@ -2,6 +2,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { GPT4oMessagesInput, O1MessagesInput } from "@/lib/types";
 import Quiz from "./interactive-components/quiz";
 import PptSlides from "./interactive-components/PptSlides";
+import Flashcards from "./interactive-components/flashcards";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface AIChatMessagesProps {
@@ -47,6 +48,12 @@ export default function AIChatMessages({ messages }: AIChatMessagesProps) {
                     if (typeof message.content === 'string') {
                       const parsedContent = JSON.parse(message.content)
                       return <PptSlides slides={parsedContent.slides} />;
+                    }
+                    break;
+                  case 'flashcards':
+                    if (typeof message.content === 'string') {
+                      const parsedContent = JSON.parse(message.content);
+                      return <Flashcards flashcards={parsedContent.flashcards} />;
                     }
                     break;
                   default:

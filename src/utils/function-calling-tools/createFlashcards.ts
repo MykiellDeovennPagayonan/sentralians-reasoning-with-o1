@@ -20,7 +20,7 @@ const createFlashcards: ChatCompletionTool = {
               },
               definition: {
                 type: "string",
-                description: "The definition or explanation of the term.",
+                description: "The definition or explanation of the term. Do not include or give hints what the term is.",
               },
             },
             required: ["term", "definition"],
