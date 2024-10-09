@@ -3,6 +3,7 @@ import { GPT4oMessagesInput, O1MessagesInput } from "@/lib/types";
 import Quiz from "./interactive-components/quiz";
 import PptSlides from "./interactive-components/PptSlides";
 import Flashcards from "./interactive-components/flashcards";
+import Spelling from "./interactive-components/spelling";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface AIChatMessagesProps {
@@ -54,6 +55,12 @@ export default function AIChatMessages({ messages }: AIChatMessagesProps) {
                     if (typeof message.content === 'string') {
                       const parsedContent = JSON.parse(message.content);
                       return <Flashcards flashcards={parsedContent.flashcards} />;
+                    }
+                    break;
+                  case 'spelling':
+                    if (typeof message.content === 'string') {
+                      const parsedContent = JSON.parse(message.content);
+                      return <Spelling spellings={parsedContent.spellings} />;
                     }
                     break;
                   default:
