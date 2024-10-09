@@ -39,8 +39,8 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
   }
 
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_flashcards") {
-    const ppt = response.choices[0].message.tool_calls[0].function.arguments
-    return {content: ppt, contentType: "flashcards"};
+    const flashcards = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: flashcards, contentType: "flashcards"};
   }
 
   return {content: response.choices[0].message.content as string};
