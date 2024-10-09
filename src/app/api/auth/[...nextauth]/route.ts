@@ -7,6 +7,7 @@ import prisma from '@/lib/db';
 declare module 'next-auth' {
   interface Session {
     accessToken?: string;
+    user: User;
   }
   
   interface User {
@@ -61,6 +62,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
+      session.user.id = token.sub as string;
       return session;
     },
   },

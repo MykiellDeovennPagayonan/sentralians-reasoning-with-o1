@@ -5,8 +5,13 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import Navbar from "@/components/layout/Navbar";
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions)
+
+  console.log(session?.user.id,'from home')
   return (
     <>
       <Navbar />
