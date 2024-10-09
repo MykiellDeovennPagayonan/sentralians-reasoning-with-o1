@@ -43,6 +43,11 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
     return {content: flashcards, contentType: "flashcards"};
   }
 
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_spelling_quiz") {
+    const spelling = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: spelling, contentType: "spelling"};
+  }
+
   return {content: response.choices[0].message.content as string};
 }
 
