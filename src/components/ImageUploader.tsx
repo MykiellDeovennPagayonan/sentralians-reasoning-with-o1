@@ -1,4 +1,6 @@
+"use client"
 import React, { useState, ChangeEvent } from 'react';
+import axios from 'axios';
 
 const ImageUploader = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -7,6 +9,7 @@ const ImageUploader = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
+      console.log(e.target.files[0])
       setFile(e.target.files[0]);
     }
   };
@@ -21,15 +24,19 @@ const ImageUploader = () => {
     const formData = new FormData();
     formData.append('image', file);
 
+    console.log(formData)
+
     try {
-      const response = await fetch('/api/products/image/upload', {
-        method: 'POST',
-        body: formData,
-      });
 
-      const data = await response.json();
+      const response = await axios.post(`/api/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
 
-      if (response.ok) {
+      const data = response.data;
+
+      if (response) {
         setUploadResult(`Image uploaded successfully. Image name: ${data.imageName}`);
       } else {
         setUploadResult(`Upload failed: ${data.error}`);
@@ -76,6 +83,7 @@ const ImageUploader = () => {
           {uploadResult}
         </p>
       )}
+      <button > Get Image </button>
     </div>
   );
 };
