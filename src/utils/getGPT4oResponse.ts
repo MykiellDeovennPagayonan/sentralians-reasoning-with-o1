@@ -43,6 +43,16 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
     return {content: flashcards, contentType: "flashcards"};
   }
 
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "draw_canvas") {
+    const flashcards = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: flashcards, contentType: "canvas"};
+  }
+
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "image_upload") {
+    const flashcards = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: flashcards, contentType: "image"};
+  }
+
   return {content: response.choices[0].message.content as string};
 }
 
