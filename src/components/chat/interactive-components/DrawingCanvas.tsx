@@ -9,24 +9,22 @@ const DrawingCanvas: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && canvasRef.current) {
-      // Define the p5 sketch
       const sketch = (p: p5) => {
         let isDrawing = false;
         let previousX = 0;
         let previousY = 0;
 
         p.setup = () => {
-          // Create a canvas that fits the parent div
           const parentWidth = canvasRef.current!.clientWidth;
           const canvas = p.createCanvas(parentWidth, 500);
           canvas.parent(canvasRef.current!);
-          p.background(255); // White background
+          p.background(255);
         };
 
         p.draw = () => {
           if (isDrawing) {
-            p.stroke(0); // Black color for drawing
-            p.strokeWeight(2); // Thickness of the line
+            p.stroke(0);
+            p.strokeWeight(2);
             p.line(previousX, previousY, p.mouseX, p.mouseY);
             previousX = p.mouseX;
             previousY = p.mouseY;
@@ -52,10 +50,8 @@ const DrawingCanvas: React.FC = () => {
         };
       };
 
-      // Initialize the p5 sketch
       const newP5 = new p5(sketch);
 
-      // Cleanup on component unmount
       return () => {
         newP5.remove();
       };
@@ -64,7 +60,6 @@ const DrawingCanvas: React.FC = () => {
 
   const uploadImage = async () => {
     if (canvasRef.current) {
-      // Find the canvas element within the div
       const canvasElement = canvasRef.current.querySelector('canvas') as HTMLCanvasElement | null;
 
       if (!canvasElement) {
@@ -73,7 +68,6 @@ const DrawingCanvas: React.FC = () => {
       }
 
       try {
-        // Convert the canvas to a Blob
         const blob = await new Promise<Blob | null>((resolve) => {
           canvasElement.toBlob((b) => resolve(b), 'image/png');
         });
@@ -88,13 +82,13 @@ const DrawingCanvas: React.FC = () => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const uploadResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/upload`, formData, {
+        const uploadResponse = await axios.post(`/api/image`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
 
-        if (uploadResponse.status === 200) {
+        if (uploadResponse.status === 201) {
           alert('Image uploaded successfully!');
         } else {
           console.error('Upload failed with status:', uploadResponse.status);
