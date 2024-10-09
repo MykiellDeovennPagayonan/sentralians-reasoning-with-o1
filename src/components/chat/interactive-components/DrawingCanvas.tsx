@@ -3,6 +3,8 @@
 import React, { useRef, useEffect } from 'react';
 import p5 from 'p5';
 import axios from 'axios';
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import fetchGenerateAIResponse from '@/utils/fetchGenerateAIResponse';
 
 const DrawingCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -87,6 +89,29 @@ const DrawingCanvas: React.FC = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
+
+        const iamgeName = uploadResponse.data.imageName
+
+        const imageUrlResponse = await axios.get(`/api/image/${iamgeName}`);
+        console.log(imageUrlResponse.data.imageUrl)
+
+        const messages : ChatCompletionMessageParam[] = [
+          {
+            role: "user",
+            content: [
+              {
+                type: "image_url",
+                image_url: {
+                  url: imageUrlResponse.data.imageUrl
+                }
+              }
+            ]
+          }
+        ]
+
+        const reply = await fetchGenerateAIResponse(messages)
+
+        console.log(reply.content   )
 
         if (uploadResponse.status === 201) {
           alert('Image uploaded successfully!');
