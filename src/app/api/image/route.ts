@@ -1,43 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// /pages/api/products/image/upload.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadFile } from '@/utils/s3Bucket';
-import multer from 'multer';
 import sharp from 'sharp';
-import crypto from "crypto";
+import crypto from 'crypto';
 
-const generateFileName = (bytes = 32) =>
-  crypto.randomBytes(bytes).toString("hex");
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
-const multerPromise = (req: NextRequest, res: NextResponse) =>
-  new Promise<void>((resolve, reject) => {
-    upload.single('image')(req as any, res as any, (err: any) => {
-      if (err) reject(err);
-      resolve();
-    });
-  });
-
-export async function POST(req: any, res: NextResponse) {
-  const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
-
+export async function POST(req: NextRequest) {
   try {
-    await multerPromise(req, res);
+    const formData = await req.formData();
+    const file = formData.get('image') as File | null;
 
-    if (!req.file) {
+    console.log(formData)
+
+    if (!file) {
       return NextResponse.json({ error: 'Image file is required' }, { status: 400 });
     }
 
-    if (req.file.size > MAX_IMAGE_SIZE) {
+    if (file.size > MAX_IMAGE_SIZE) {
       return NextResponse.json({ error: 'Image file is too large' }, { status: 413 });
     }
 
-    const imageName = generateFileName(); 
-    const fileBuffer = await sharp(req.file.buffer).toBuffer();
+    const imageName = generateFileName();
+    const buffer = await file.arrayBuffer();
+    const fileBuffer = await sharp(Buffer.from(buffer)).toBuffer();
 
-    await uploadFile(fileBuffer, imageName, req.file.mimetype);
+    await uploadFile(fileBuffer, imageName, file.type);
 
     return NextResponse.json({ imageName }, { status: 201 });
   } catch (error) {
