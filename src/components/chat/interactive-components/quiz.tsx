@@ -38,22 +38,14 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
     setShowScore(false);
   };
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
-
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
-        <div 
-          className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out" 
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
+    <div className="flex flex-col flex-grow items-center rounded-lg bg-white w-[250px] sm:w-[450px] md:w-[550px] justify-center p-4">
       {showScore ? (
         <div className="text-center">
           <p className="text-2xl font-bold mb-4">
             Congratulations! You scored {score} out of {questions.length}
           </p>
-          <button 
+          <button
             onClick={handleRedo}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
           >
@@ -62,8 +54,8 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
         </div>
       ) : (
         <>
-          <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].questionText}</h2>
-          <div className="space-y-3">
+          <h2 className="text-lg font-semibold mb-4">{questions[currentQuestion].questionText}</h2>
+          <div className="space-y-3 w-full sm:w-3/4">
             {questions[currentQuestion].choices.map((choice, index) => (
               <button
                 key={index}
@@ -73,6 +65,9 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
                 {choice.text}
               </button>
             ))}
+            <div className="text-sm text-center text-muted-foreground">
+              {currentQuestion + 1} of {questions.length}
+            </div>
           </div>
         </>
       )}

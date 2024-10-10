@@ -1,17 +1,44 @@
 'use client'
 
 import { SendIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useRouter } from 'next/navigation'
 import { GPT4oMessagesInput, O1MessagesInput } from '@/lib/types'
 import AIChatMessages from './AIChatMessages'
 import fetchGenerateAIResponse from '@/utils/fetchGenerateAIResponse'
+import createChat from '@/utils/createChat'
+import submitMessage from '@/utils/submitMessage'
 
-export default function AIChat() {
+export default function AIChat({ initialMessages, userId, chatId }: { initialMessages?: (GPT4oMessagesInput | O1MessagesInput)[], userId: string, chatId?: string }) {
   const [messages, setMessages] = useState<(GPT4oMessagesInput | O1MessagesInput)[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (initialMessages) {
+      // Rename messageType to componentMessageType and narrow its type
+      const updatedMessages: (GPT4oMessagesInput | O1MessagesInput)[] = initialMessages.map((message) => {
+        if ('messageType' in message) {
+          const { messageType, ...rest } = message;
+
+          if (['quiz', 'ppt', 'flashcards'].includes(messageType as string)) {
+            return {
+              ...rest,
+              componentMessageType: messageType as GPT4oMessagesInput['componentMessageType']
+            };
+          }
+        }
+        return message;
+      });
+
+      setMessages(updatedMessages);
+    }
+  }, [initialMessages]);
+
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setInput(event.target.value)
@@ -27,15 +54,52 @@ export default function AIChat() {
     setInput('')
     setIsLoading(true)
 
+    if (!chatId) {
+      try {
+        const chatSessionId = await createChat(userId, input.trim(), newUserMessage)
+        
+        const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
+        router.push(`/chat/${chatSessionId}`)
+        router.refresh()
+
+        if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards') {
+          const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }
+
+          setMessages(prevMessages => [...prevMessages, newAiMessage])
+          await submitMessage(userId, chatSessionId, newAiMessage)
+          return
+        }
+        const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content }
+
+        setMessages(prevMessages => [...prevMessages, newAiMessage])
+        await submitMessage(userId, chatSessionId, newAiMessage)
+    
+        return
+      } catch (error) {
+        console.error('Error generating AI response:', error)
+        setMessages(prevMessages => [...prevMessages, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
+      } finally {
+        setIsLoading(false)
+        return
+      }
+    }
+
     try {
+      await submitMessage(userId, chatId, newUserMessage)
+
       const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
+
       if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling' || aiResponse.contentType == "canvas" || aiResponse.contentType == "image" || aiResponse.contentType == "physics") {
         const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }
+
         setMessages(prevMessages => [...prevMessages, newAiMessage])
+        await submitMessage(userId, chatId, newAiMessage)
         return
       }
       const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content }
+
       setMessages(prevMessages => [...prevMessages, newAiMessage])
+      await submitMessage(userId, chatId, newAiMessage)
     } catch (error) {
       console.error('Error generating AI response:', error)
       setMessages(prevMessages => [...prevMessages, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
@@ -43,7 +107,6 @@ export default function AIChat() {
       setIsLoading(false)
     }
   }
-  
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto px-4">

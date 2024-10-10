@@ -22,11 +22,10 @@ export default async function fetchGenerateAIResponse(messages: ChatCompletionMe
     }
 
     const data = await response.json();
-    console.log(data)
     if (data.contentType) {
-      return {content: data.content, contentType: data.contentType};
+      return { content: data.content, contentType: data.contentType };
     }
-    return {content: data.content};
+    return { content: data.content };
   } catch (error) {
     console.error('Error calling AI response API:', error);
     throw error;

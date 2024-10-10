@@ -27,7 +27,8 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
 
         p.setup = () => {
           const parentWidth = canvasRef.current!.clientWidth;
-          const canvas = p.createCanvas(parentWidth, 500);
+          const parentHeight = canvasRef.current!.clientHeight;
+          const canvas = p.createCanvas(parentWidth, parentHeight);
           canvas.parent(canvasRef.current!);
           p.background(255);
         };
@@ -143,10 +144,10 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-[600px] bg-gray-100 p-4 aspect-[16/9]">
+    <div className="flex flex-col justify-center items-center w-[250px] sm:w-[450px] md:w-[550px] bg-white rounded-lg p-4 aspect-[1/1]">
       <div
         ref={canvasRef}
-        className="w-full max-w-3xl border-2 border-gray-300 shadow-md"
+        className="w-full aspect-square max-w-3xl border-2 border-gray-300"
       ></div>
       <div className="mt-4 flex space-x-2">
         {!isSuccessful && (
