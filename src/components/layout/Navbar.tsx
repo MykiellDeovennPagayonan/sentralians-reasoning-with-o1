@@ -91,7 +91,7 @@ function AuthButton() {
   if (session) {
     return (
       <>
-        <Image className="rounded-full hidden md:block" src={session?.user?.image || "/default-profile.png"} alt="your profile picture" width={35} height={35} />
+        <Image className="rounded-full hidden md:block" src={session?.user?.image || "/default-profile.jpg"} alt="" width={35} height={35} />
         <Button variant="default" className="bg-black rounded-full text-white hover:bg-gray-800 mx-2 md:m-0" onClick={() => signOut()}>Sign out</Button>
       </>
     )

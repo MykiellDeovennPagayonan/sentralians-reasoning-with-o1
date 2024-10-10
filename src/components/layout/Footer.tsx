@@ -1,5 +1,5 @@
-import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from "lucide-react"
-import Link from "next/link"
+import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -33,12 +33,11 @@ export default function Footer() {
               <li><Link href="#" className="text-gray-600 hover:text-indigo-600">Demo</Link></li>
             </ul>
           </div>
-          
         </div>
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <h2 className="text-2xl font-bold text-indigo-900">Appname.</h2>
+              <h2 className="text-2xl font-bold text-indigo-900">Bricolai.</h2>
             </div>
             <div className="flex space-x-4">
               <Link href="#" className="text-gray-400 hover:text-indigo-600">
@@ -65,10 +64,14 @@ export default function Footer() {
             <Link href="#" className="hover:text-indigo-600">Cookie Policy</Link>
           </div>
           <div className="mt-4 text-center text-sm text-gray-500">
-            © 2024 Appname. All rights reserved
+            © 2024 Bricolai. All rights reserved
+          </div>
+          {/* Freepik Attribution Section */}
+          <div className="mt-4 text-center text-sm text-gray-500">
+            Images sourced from <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">Freepik</a>.
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
