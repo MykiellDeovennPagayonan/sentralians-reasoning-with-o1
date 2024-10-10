@@ -47,7 +47,7 @@ export default async function ChatPage({ params }: { params: { chatId: string } 
     }
   })
 
-  const fiilterdMessages = chats?.messages.map((message) => {
+  const filteredMessages = chats?.messages.map((message) => {
     const { messageType, ...rest } = message;
     if (messageType === null) {
       return rest;
@@ -57,7 +57,7 @@ export default async function ChatPage({ params }: { params: { chatId: string } 
 
   return (
     <div className="flex flex-col h-screen bg-grid-black/[0.1]">
-      <ChatLayout chatHistory={chatsHistory} userId={session.user.id} messages={fiilterdMessages} chatId={params.chatId} />
+      <ChatLayout chatHistory={chatsHistory} userId={session.user.id} messages={filteredMessages} chatId={params.chatId} />
     </div>
   )
 }
