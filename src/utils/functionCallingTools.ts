@@ -3,11 +3,17 @@ import { ChatCompletionTool } from "openai/resources/index.mjs";
 import createQuiz from "./function-calling-tools/createQuiz";
 import createPptSlides from "./function-calling-tools/createPptSlides";
 import createFlashcards from "./function-calling-tools/createFlashcards";
+import drawCanvas from "./function-calling-tools/drawCanvas";
+import imageUpload from "./function-calling-tools/imageUpload";
+import createSpellingQuiz from "./function-calling-tools/createSpellingQuiz";
 
 const functionCallingTools: ChatCompletionTool[] = [
   createQuiz,
   createPptSlides,
-  createFlashcards
+  createFlashcards,
+  drawCanvas,
+  imageUpload,
+  createSpellingQuiz
 ]
 
 export default functionCallingTools;

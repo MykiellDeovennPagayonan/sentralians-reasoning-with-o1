@@ -3,13 +3,18 @@ import { GPT4oMessagesInput, O1MessagesInput } from "@/lib/types";
 import Quiz from "./interactive-components/quiz";
 import PptSlides from "./interactive-components/PptSlides";
 import Flashcards from "./interactive-components/flashcards";
+import ImageUploader from "./interactive-components/ImageUploader";
+import DrawingCanvas from "./interactive-components/DrawingCanvas";
+import Spelling from "./interactive-components/spelling";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import React from "react";
 
 interface AIChatMessagesProps {
   messages: GPT4oMessagesInput[] | O1MessagesInput[];
+  setMessages: React.Dispatch<React.SetStateAction<GPT4oMessagesInput[] | O1MessagesInput[]>>;
 }
 
-export default function AIChatMessages({ messages }: AIChatMessagesProps) {
+export default function AIChatMessages({ messages, setMessages }: AIChatMessagesProps) {
   console.log(messages);
 
   return (
@@ -56,17 +61,29 @@ export default function AIChatMessages({ messages }: AIChatMessagesProps) {
                       return <Flashcards flashcards={parsedContent.flashcards} />;
                     }
                     break;
+                  case 'canvas':
+                    return <DrawingCanvas messages={messages} setMessages={setMessages} />
+                    break;
+                  case 'image':
+                    console.log("yes?")
+                    return <ImageUploader messages={messages} setMessages={setMessages} />
+                  case 'spelling':
+                    if (typeof message.content === 'string') {
+                      const parsedContent = JSON.parse(message.content);
+                      return <Spelling spellings={parsedContent.spellings} />;
+                    }
+                    break;
                   default:
                     return Array.isArray(message.content)
                       ? message.content.map((content, subIndex) => (
-                          <div key={subIndex}>
-                            {typeof content === 'string'
-                              ? content
-                              : 'text' in content
+                        <div key={subIndex}>
+                          {typeof content === 'string'
+                            ? content
+                            : 'text' in content
                               ? content.text
                               : JSON.stringify(content)}
-                          </div>
-                        ))
+                        </div>
+                      ))
                       : <div>{message.content}</div>;
                 }
               })()
