@@ -25,7 +25,7 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
         if ('messageType' in message) {
           const { messageType, ...rest } = message;
 
-          if (['quiz', 'ppt', 'flashcards'].includes(messageType as string)) {
+          if (['quiz', 'ppt', 'flashcards', 'physics', 'spelling', 'canvas', 'image'].includes(messageType as string)) {
             return {
               ...rest,
               componentMessageType: messageType as GPT4oMessagesInput['componentMessageType']
@@ -62,7 +62,7 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
         router.push(`/chat/${chatSessionId}`)
         router.refresh()
 
-        if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards') {
+        if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling' || aiResponse.contentType == "canvas" || aiResponse.contentType == "image" || aiResponse.contentType == "physics") {
           const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }
 
           setMessages(prevMessages => [...prevMessages, newAiMessage])
@@ -88,6 +88,8 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
       await submitMessage(userId, chatId, newUserMessage)
 
       const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
+
+      console.log(aiResponse)
 
       if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling' || aiResponse.contentType == "canvas" || aiResponse.contentType == "image" || aiResponse.contentType == "physics") {
         const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }

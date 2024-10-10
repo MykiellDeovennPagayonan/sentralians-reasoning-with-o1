@@ -5,10 +5,10 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from '@/lib/db';
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: 'jwt'
-  },
+  // adapter: PrismaAdapter(prisma),
+  // session: {
+  //   strategy: 'jwt'
+  // },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
