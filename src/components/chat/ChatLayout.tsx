@@ -28,7 +28,7 @@ export default function ChatLayout({ chatHistory, userId, messages, chatId }: { 
               } md:block absolute md:relative z-40 h-full md:h-auto`}
             style={{ width: isSidebarOpen ? '80%' : '20%' }}
           >
-            <ChatHistory history={chatHistory} />
+            <ChatHistory history={chatHistory} userId={userId} />
           </ResizablePanel>
           <ResizableHandle className="hidden md:flex" />
           <ResizablePanel defaultSize={80} className="w-full md:w-auto">

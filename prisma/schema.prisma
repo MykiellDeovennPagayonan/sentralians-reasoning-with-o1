@@ -30,12 +30,12 @@ model Chat {
 }
 
 model Message {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   role        Role
   content     String
   messageType String?
 
-  chat          Chat   @relation(fields: [chatSessionId], references: [chatSessionId])
+  chat          Chat   @relation(fields: [chatSessionId], references: [chatSessionId], onDelete: Cascade)
   chatSessionId String @db.ObjectId
 
   @@map("messages")
