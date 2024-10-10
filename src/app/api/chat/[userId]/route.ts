@@ -1,6 +1,6 @@
 import prisma from "@/lib/db"
-import { Chat } from "@prisma/client";
 import { NextResponse } from "next/server";
+import generateChatName from "@/utils/generateChatName";
 
 // gets all chats for a user
 export async function GET(
@@ -21,35 +21,19 @@ export async function GET(
 }
 
 // creates a new chat
-
-// fetch structure for the post method would look like:
-// const response = await fetch('/api/chat/<userid>', {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     chatName: "pizza quiz",
-//   }),
-// });
-//
-// const data = await response.json();
-// const chatSessionId = data.chatSessionId; // gets the session id
-// you can use this session id to call the API for appending new messages to chat
-
 export async function POST(
   request: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
-    const body: Chat = await request.json();
+    const { input }: { input: string } = await request.json();
+    console.log(input, 'input')
+    const chatName = await generateChatName(input.trim())
+    console.log(chatName, 'chatName')
 
-    // still unsure how to handle the chatname yet.
-    // im thinking of automatically generated chat names when you create a chat
-    // just like chatgpt. tho i dunno how it is implemented.
     const newChat = await prisma.chat.create({
       data: {
-        chatName: body.chatName,
+        chatName: chatName,
         userId: params.userId
       },
     })

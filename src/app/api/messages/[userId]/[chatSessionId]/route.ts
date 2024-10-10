@@ -1,56 +1,22 @@
-import { Message, Content } from '@prisma/client'
+import { Message } from '@prisma/client'
 import prisma from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-// the chat already exists, and the user sends more messages into the chat
-// or the assistant replies to the user
-
-// fetch structure for the post method would look like:
-// const response = await fetch('/api/messages/<userid>/<sessionid>', {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     message: {
-//       "role": "user",
-//       "content": [
-//         {
-//           "type": "text",
-//           "text": "wow"
-//         }
-//       ]
-//     }
-//   }),
-// });
-
+// sends and stores the message to the database
 export async function POST(
   request: Request,
   { params }: { params: { userId: string, chatSessionId: string } }
 ) {
   try {
-    const body: Message & { content: Content[] } = await request.json();
+    const body = await request.json();
+    const message: Message & { componentMessageType: string } = body.message;
 
-    await prisma.chat.update({
-      where: {
-        chatSessionId: params.chatSessionId
-      },
+    await prisma.message.create({
       data: {
-        messages: {
-          create: {
-            role: body.role,
-            content: {
-              createMany: {
-                data: body.content.map((content) => {
-                  return {
-                    contentType: content.contentType,
-                    text: content.text
-                  }
-                })
-              }
-            }
-          }
-        }
+        chatSessionId: params.chatSessionId,
+        role: message.role,
+        content: message.content,
+        messageType: message.componentMessageType
       }
     })
 

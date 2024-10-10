@@ -32,7 +32,7 @@ model Chat {
 model Message {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   role        Role
-  content     Content[]
+  content     String
   messageType String?
 
   chat          Chat   @relation(fields: [chatSessionId], references: [chatSessionId])
@@ -41,16 +41,16 @@ model Message {
   @@map("messages")
 }
 
-model Content {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  contentType String
-  text        String?
+// model Content {
+//   id          String  @id @default(auto()) @map("_id") @db.ObjectId
+//   contentType String
+//   text        String?
 
-  message   Message @relation(fields: [messageId], references: [id])
-  messageId String  @db.ObjectId
+//   message   Message @relation(fields: [messageId], references: [id])
+//   messageId String  @db.ObjectId
 
-  @@map("contents")
-}
+//   @@map("contents")
+// }
 
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
