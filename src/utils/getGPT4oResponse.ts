@@ -15,7 +15,7 @@ const openai = new OpenAI({
   baseURL,
 });
 
-export default async function getGPT4oResponse(messages : ChatCompletionMessageParam[]) : Promise<AIResponse> {
+export default async function getGPT4oResponse(messages : ChatCompletionMessageParam[]) : Promise<AIResponse> {  
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: messages,
