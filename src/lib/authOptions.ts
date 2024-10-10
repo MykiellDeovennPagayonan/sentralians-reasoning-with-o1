@@ -1,8 +1,9 @@
-import { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions, User } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from '@/lib/db';
+import bcrypt from 'bcrypt';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -20,21 +21,36 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text", placeholder: "Enter your email" },
         password: { label: "Password", type: "password", placeholder: "Enter your password" }
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<User | null> {
         if (!credentials) {
           return null;
         }
-
-        const { email, password } = credentials;
-
-        // For demonstration purposes, we'll use hardcoded values
-        if (email === 'admin@gmail.com' && password === 'password') {
-          // Return a User object with id as a string
-          return { id: '1', name: 'Admin', email: 'admin@example.com' };
+      
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
+      
+          if (!user || !user.email) { 
+            return null;
+          }
+      
+          const isValid = user.hashedPassword ? await bcrypt.compare(credentials.password, user.hashedPassword) : false;
+      
+          if (!isValid) {
+            return null;
+          }
+      
+          return {
+            id: user.id,
+            name: user.name || 'Anonymous',
+            email: user.email,
+          } as User;
+        } catch (error) {
+          console.error(error);
+          return null;
         }
-
-        return null;
-      },
+      }
     }),
   ],
   pages: {

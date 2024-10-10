@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-import { FormSchema } from "@/lib/schema/formSchema";
+import { FormSchema } from "@/lib/schemas/formSchema";
 
 type FormData = z.infer<typeof FormSchema>;
 
@@ -25,12 +25,15 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: FormData) => {
+    console.log("Form Data:", data);
     const result = await signIn("credentials", {
       redirect: false,
       email: data.email,
       password: data.password,
     });
-
+  
+    console.log("SignIn Result:", result);
+  
     if (result?.error) {
       console.error(result.error);
       alert("Invalid credentials, please try again.");

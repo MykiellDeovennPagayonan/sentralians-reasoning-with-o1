@@ -58,8 +58,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   accounts      Account[]
   sessions      Session[]
+  hashedPassword String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
