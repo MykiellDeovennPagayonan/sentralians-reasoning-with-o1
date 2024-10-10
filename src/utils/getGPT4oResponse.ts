@@ -51,6 +51,7 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "image_upload") {
     const flashcards = response.choices[0].message.tool_calls[0].function.arguments
     return {content: flashcards, contentType: "image"};
+  }
     
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_spelling_quiz") {
     const spelling = response.choices[0].message.tool_calls[0].function.arguments
