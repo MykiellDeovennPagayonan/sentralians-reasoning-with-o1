@@ -19,14 +19,14 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
   console.log(messages);
 
   return (
-    <ScrollArea className="flex-grow w-full p-4 space-y-4">
+    <ScrollArea className="flex-grow w-full p-0 md:p-2 space-y-4">
       {messages.map((message, index) => (
         <div
           key={index}
           className={`flex items-start space-x-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
         >
           {message.role !== 'user' && (
-            <Avatar className="bg-muted flex-shrink-0">
+            <Avatar className="bg-muted flex-shrink-0 w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10">
               <AvatarFallback>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="12" cy="12" r="10" stroke="#A0AEC0" strokeWidth="2" />
@@ -36,10 +36,13 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
           )}
 
           <div
-            className={`py-2 px-4 rounded-lg mb-4 ${message.role === 'user'
+            className={`rounded-lg mb-4 ${message.role === 'user'
               ? 'bg-primary text-primary-foreground'
               : 'bg-muted border-2 border-gray-300'
-              }`}
+              }
+              ${!message.componentMessageType && 'py-2 px-4'}
+              `}
+              
           >
             {message.content ? (
               (() => {
@@ -63,6 +66,7 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                     }
                     break;
                   case 'canvas':
+                    console.log("canvas")
                     return <DrawingCanvas messages={messages} setMessages={setMessages} />
                   case 'image':
                     return <ImageUploader messages={messages} setMessages={setMessages} />
@@ -98,7 +102,7 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
           </div>
 
           {message.role === 'user' && (
-            <Avatar className="bg-muted flex-shrink-0">
+            <Avatar className="bg-muted w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex-shrink-0">
               <AvatarFallback>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#4A5568" />
