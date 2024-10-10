@@ -16,6 +16,7 @@ interface DrawingCanvasProps {
 
 const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [color, setColor] = useState('#000000')
   const [brushSize, setBrushSize] = useState(5)
@@ -23,14 +24,27 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   const [uploading, setUploading] = useState(false)
   const [isSuccessful, setIsSuccessful] = useState(false)
 
-  useEffect(() => {
+  // Function to resize the canvas to match the container
+  const resizeCanvas = () => {
     const canvas = canvasRef.current
-    if (canvas) {
+    const container = containerRef.current
+    if (canvas && container) {
+      const { width, height } = container.getBoundingClientRect()
+      canvas.width = width
+      canvas.height = height
       const ctx = canvas.getContext('2d')
       if (ctx) {
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
       }
+    }
+  }
+
+  useEffect(() => {
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+    return () => {
+      window.removeEventListener('resize', resizeCanvas)
     }
   }, [])
 
@@ -53,14 +67,18 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (ctx && canvas) {
+      const rect = canvas.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+
       ctx.lineWidth = brushSize
       ctx.lineCap = 'round'
       ctx.strokeStyle = tool === 'eraser' ? 'white' : color
 
-      ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      ctx.lineTo(x, y)
       ctx.stroke()
       ctx.beginPath()
-      ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      ctx.moveTo(x, y)
     }
   }
 
@@ -99,8 +117,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
       try {
         const imageUrl = await saveImage(formData)
 
-        const message: ChatCompletionMessageParam =
-        {
+        const message: ChatCompletionMessageParam = {
           role: "user",
           content: [
             {
@@ -133,16 +150,14 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4 p-4 bg-gray-100 rounded-lg shadow-lg">
-      <div className="relative">
+    <div className="flex flex-col items-center space-y-4 p-4 bg-gray-100 rounded-lg shadow-lg w-full max-w-3xl">
+      <div ref={containerRef} className="relative w-full aspect-square md:aspect-video">
         <canvas
           ref={canvasRef}
-          width={500}
-          height={500}
           onMouseDown={startDrawing}
           onMouseUp={stopDrawing}
           onMouseMove={draw}
-          className="border-4 border-gray-300 rounded-lg shadow-inner bg-white"
+          className="border-4 border-gray-300 rounded-lg shadow-inner bg-white w-full h-full"
         />
         <div className="absolute bottom-2 left-2 bg-white p-2 rounded-md shadow">
           <input
@@ -153,7 +168,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
           />
         </div>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap justify-center space-x-2">
         <Button onClick={() => setTool('brush')} variant={tool === 'brush' ? 'default' : 'outline'}>
           <Paintbrush className="w-4 h-4 mr-2" />
           Brush
@@ -173,7 +188,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
         />
         <span className="text-sm font-medium w-8">{brushSize}</span>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap justify-center space-x-2">
         <Button onClick={clearCanvas} variant="destructive">
           <RotateCcw className="w-4 h-4 mr-2" />
           Reset
