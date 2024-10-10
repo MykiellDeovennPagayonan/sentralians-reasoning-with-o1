@@ -27,6 +27,10 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
     presence_penalty: 0,
   })
 
+  if (response.choices[0].message.tool_calls) {
+    console.log(response.choices[0].message.tool_calls[0].function.arguments)
+  }
+
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_quiz") {
     const quiz = response.choices[0].message.tool_calls[0].function.arguments
     return {content: quiz, contentType: "quiz"};
@@ -56,6 +60,11 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_spelling_quiz") {
     const spelling = response.choices[0].message.tool_calls[0].function.arguments
     return {content: spelling, contentType: "spelling"};
+  }
+
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "run_physics_simulation") {
+    const spelling = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: spelling, contentType: "physics"};
   }
 
   return {content: response.choices[0].message.content as string};

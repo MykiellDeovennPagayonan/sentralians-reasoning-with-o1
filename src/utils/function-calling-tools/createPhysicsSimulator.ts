@@ -4,7 +4,7 @@ const createPhysicsSimulator: ChatCompletionTool = {
   type: "function",
   function: {
     name: "run_physics_simulation",
-    description: "Simulate the movement of physics objects based on their velocity, position, and weight.",
+    description: "run this function when user wants a physics simulator with physics objects based on their velocity, position, and weight.",
     parameters: {
       type: "object",
       properties: {

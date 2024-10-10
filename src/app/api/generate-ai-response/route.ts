@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     console.log(response)
 
-    if (response.contentType === "quiz" || response.contentType === "ppt" || response.contentType == "flashcards" || response.contentType == "spelling" || response.contentType == "canvas" || response.contentType == "image") {
+    if (response.contentType === "quiz" || response.contentType === "ppt" || response.contentType == "flashcards" || response.contentType == "spelling" || response.contentType == "canvas" || response.contentType == "image" || response.contentType == "physics") {
       return NextResponse.json({ content: response.content, contentType: response.contentType } as AIResponse, { status: 200 });
     }
 
