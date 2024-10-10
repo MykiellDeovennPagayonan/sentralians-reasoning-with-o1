@@ -29,7 +29,7 @@ export default function AIChat() {
 
     try {
       const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
-      if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling') {
+      if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling' || aiResponse.contentType == "canvas" || aiResponse.contentType == "image") {
         const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }
         setMessages(prevMessages => [...prevMessages, newAiMessage])
         return
@@ -47,7 +47,7 @@ export default function AIChat() {
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto px-4">
-      <AIChatMessages messages={messages} />
+      <AIChatMessages messages={messages} setMessages={setMessages}/>
       <form onSubmit={handleSubmit} className="p-4 bg-white border-2 border-black border-b-0 rounded-t-lg">
         <div className="flex space-x-2">
           <Input
