@@ -66,6 +66,7 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                     }
                     break;
                   case 'canvas':
+                    console.log("canvas")
                     return <DrawingCanvas messages={messages} setMessages={setMessages} />
                   case 'image':
                     return <ImageUploader messages={messages} setMessages={setMessages} />

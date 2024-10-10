@@ -54,8 +54,8 @@ const Quiz: React.FC<QuizProps> = ({ questions }) => {
         </div>
       ) : (
         <>
-          <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].questionText}</h2>
-          <div className="space-y-3">
+          <h2 className="text-lg font-semibold mb-4">{questions[currentQuestion].questionText}</h2>
+          <div className="space-y-3 w-full sm:w-3/4">
             {questions[currentQuestion].choices.map((choice, index) => (
               <button
                 key={index}

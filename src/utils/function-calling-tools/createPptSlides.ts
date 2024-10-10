@@ -118,9 +118,13 @@ const createPptSlides : ChatCompletionTool = {
                               description: "Bullet points or key features for the item.",
                               items: {
                                 type: "string"
-                              }
+                              },
+                              minItems: 1,
+                              maxItems: 3
                             },
                           },
+                          minItems: 2,
+                          maxItems: 3,
                           required: ["header", "points"],
                           additionalProperties: false
                         },

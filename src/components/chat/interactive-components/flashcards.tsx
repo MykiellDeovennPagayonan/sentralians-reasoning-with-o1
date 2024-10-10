@@ -16,7 +16,6 @@ interface FlashcardProps {
 const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped)
@@ -43,8 +42,6 @@ const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
       <div
         className={`relative w-full bg-white aspect-[4/3] rounded-lg cursor-pointer perspective-1000 transition-transform duration-500 ${isFlipped ? 'rotate-y-180' : ''}`}
         onClick={handleFlip}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
       >
         <div className="relative w-full h-full text-card-foreground">
           <div className={`absolute w-full h-full backface-hidden flex flex-col items-center justify-center p-6 ${isFlipped ? '' : 'rotate-y-180 opacity-0'}`}>
@@ -56,28 +53,26 @@ const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-muted-foreground">
             {currentIndex + 1} of {flashcards.length}
           </div>
-          {isHovering && (
-            <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute left-2 bottom-2 opacity-70 hover:opacity-100"
-                onClick={handlePrevious}
-                aria-label="Previous card"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 bottom-4 opacity-70 hover:opacity-100"
-                onClick={handleNext}
-                aria-label="Next card"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </Button>
-            </>
-          )}
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-2 bottom-2 opacity-70 hover:opacity-100"
+              onClick={handlePrevious}
+              aria-label="Previous card"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 bottom-4 opacity-70 hover:opacity-100"
+              onClick={handleNext}
+              aria-label="Next card"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+          </>
         </div>
       </div>
     </div>
