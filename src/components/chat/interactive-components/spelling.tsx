@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Mic, Volume2 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Volume2, BookOpen, FileText } from "lucide-react";
 import { textToSpeech } from '@/components/speech/TextToSpeech';
 
 interface Spelling {
   word: string;
   definition: string;
-  examples: string[]; // Change to an array of strings
+  examples: string[];
 }
 
 interface SpellingProps {
@@ -41,12 +42,12 @@ const Spelling: React.FC<SpellingProps> = ({ spellings }) => {
   };
 
   const speakExample = (example: string) => {
-    speakText(example); // Speak the specific example passed as an argument
+    speakText(example);
   };
 
   const handleAnswerClick = () => {
     const correctAnswer = spellings[currentQuestion].word.toLowerCase();
-    const isCorrect = currAnswer.toLowerCase() === correctAnswer;
+    const isCorrect = currAnswer.trim().toLowerCase() === correctAnswer;
 
     if (isCorrect) {
       setScore(score + 1);
@@ -65,95 +66,96 @@ const Spelling: React.FC<SpellingProps> = ({ spellings }) => {
     setCurrentQuestion(0);
     setScore(0);
     setShowScore(false);
+    setCurrAnswer("");
   };
 
-  const progress = ((currentQuestion + 1) / spellings.length) * 100;
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gradient-to-r from-blue-100 to-blue-50">
-      <div className="w-full max-w-xl p-8 bg-white rounded-2xl shadow-xl transition-all duration-300">
-        <div className="w-full bg-gray-300 rounded-full h-3 mb-6 shadow-inner">
-          <div 
-            className="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-300 ease-in-out" 
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-
+    <Card className="w-full max-w-md mx-auto shadow-lg">
+      <CardHeader className='px-0 py-4'>
+        <CardTitle className="text-center text-2xl  font-bold">Spelling Assistant</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6 px-4 sm:px-6 py-0">
         {showScore ? (
-          <div className="text-center">
-            <p className="text-2xl font-bold mb-4 text-gray-800">
+          <div className="text-center mb-4">
+            <p className="text-xl font-bold mb-4 text-gray-800">
               Congratulations! You scored {score} out of {spellings.length}
             </p>
-            <Button 
+            <Button
               onClick={handleRedo}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 sm:py-2 px-2 sm:px-4 rounded-lg transition duration-300 ease-in-out"
             >
               Redo Spelling
             </Button>
           </div>
         ) : (
           <>
+            <div className="flex justify-center items-center space-x-4">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={speakWord}
+                aria-label="Listen to word"
+                disabled={isSpeaking}
+              >
+                <Volume2 className="h-6 w-6" />
+              </Button>
+              <p className="text-sm sm:text-base font-medium">Listen and spell the word</p>
+            </div>
             <div className="flex flex-col items-center">
-              <div className="flex flex-col md:flex-row w-full md:gap-6 mt-5 items-center justify-center">
-                <div className='flex flex-col items-center justify-center text-center w-full md:w-2/3'>
-                  <div className="relative flex flex-col items-center mb-4">
-                    <p className="text-sm font-medium text-blue-500 mb-2">
-                      Press the speaker icon to start the spelling word.
-                    </p>
-                    <div
-                      className={`flex justify-center items-center w-20 h-20 rounded-full transition-all duration-300 ${isSpeaking ? 'bg-blue-300 animate-pulse shadow-lg' : 'bg-gray-300'}`}
-                    >
-                      <Volume2 
-                        onClick={speakWord} 
-                        className={`text-gray-600 cursor-pointer hover:text-blue-600 transition-colors duration-300`} 
-                        size={32}
-                      />
-                    </div>
-                    {isSpeaking && (
-                      <p className="absolute -top-8 text-blue-500 text-sm font-medium">Speaking...</p>
-                    )}
-                    <div className='flex flex-col space-y-4 items-center w-full'>
-                      <h3 className="text-lg mt-4 font-semibold text-gray-800 text-center">
-                        {spellings[currentQuestion].definition}
-                      </h3>
-                      <Mic 
-                        onClick={speakDefinition} 
-                        className="cursor-pointer text-gray-600 hover:text-blue-600 transition-colors duration-300" 
-                        size={32}
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className='flex flex-col space-y-4 items-center justify-center w-full md:w-1/3 text-center'>
-                  {spellings[currentQuestion].examples.map((example, index) => (
-                    <Button 
-                      key={index}
-                      onClick={() => speakExample(example)} // Speak the specific example when clicked
-                      className='w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300'>{`Example ${index + 1}`}</Button>
-                  ))}
-                </div>
-              </div>
-
-              <div className='flex flex-col space-y-4 mt-6 w-full'>
-                <Input 
-                  className='w-full py-3 border-2 border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-400 transition-all duration-300' 
-                  placeholder='Input your answer' 
-                  value={currAnswer} 
-                  onChange={(e) => setCurrAnswer(e.target.value)} 
-                />
-                <Button 
-                  className='w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300'
-                  onClick={handleAnswerClick}
+              <div className='flex flex-col space-y-2 items-center w-full'>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={speakDefinition}
+                  aria-label="Listen to definition"
+                  className="w-full flex items-center space-x-2 py-2"
+                  disabled={isSpeaking}
                 >
-                  Submit
+                  <BookOpen className="h-4 w-4 text-gray-600" />
+                  <span>Definition</span>
                 </Button>
+                <div>
+                  <p className="text-sm mb-4"> Definition: {spellings[currentQuestion].definition}</p>
+                </div>
+                {spellings[currentQuestion].examples.map((example, index) => (
+                  <Button
+                    key={index}
+                    onClick={() => speakExample(example)}
+                    variant="outline"
+                    size="sm"
+                    className='w-full flex items-center space-x-2 py-2'
+                    disabled={isSpeaking}
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>{`Example ${index + 1}`}</span>
+                  </Button>
+                ))}
               </div>
+            </div>
+
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Type your answer"
+                className="pr-10"
+                value={currAnswer}
+                onChange={(e) => setCurrAnswer(e.target.value)}
+              />
             </div>
           </>
         )}
-      </div>
-    </div>
+      </CardContent>
+      {!showScore && (
+        <CardFooter className='flex flex-col space-y-4 py-4'>
+          <Button className="w-full" onClick={handleAnswerClick}>
+            Submit
+          </Button>
+          <div className="text-sm text-center text-muted-foreground">
+            {currentQuestion + 1} of {spellings.length}
+          </div>
+        </CardFooter>
+      )}
+    </Card>
   );
 };
 
