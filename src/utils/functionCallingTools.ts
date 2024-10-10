@@ -6,6 +6,7 @@ import createFlashcards from "./function-calling-tools/createFlashcards";
 import drawCanvas from "./function-calling-tools/drawCanvas";
 import imageUpload from "./function-calling-tools/imageUpload";
 import createSpellingQuiz from "./function-calling-tools/createSpellingQuiz";
+import createPhysicsSimulator from "./function-calling-tools/createPhysicsSimulator";
 
 const functionCallingTools: ChatCompletionTool[] = [
   createQuiz,
@@ -13,7 +14,8 @@ const functionCallingTools: ChatCompletionTool[] = [
   createFlashcards,
   drawCanvas,
   imageUpload,
-  createSpellingQuiz
+  createSpellingQuiz,
+  createPhysicsSimulator
 ]
 
 export default functionCallingTools;

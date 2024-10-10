@@ -6,6 +6,7 @@ import Flashcards from "./interactive-components/flashcards";
 import ImageUploader from "./interactive-components/ImageUploader";
 import DrawingCanvas from "./interactive-components/DrawingCanvas";
 import Spelling from "./interactive-components/spelling";
+import PhysicsSimulator from "./interactive-components/PhysicsSimulator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React from "react";
 
@@ -63,14 +64,18 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                     break;
                   case 'canvas':
                     return <DrawingCanvas messages={messages} setMessages={setMessages} />
-                    break;
                   case 'image':
-                    console.log("yes?")
                     return <ImageUploader messages={messages} setMessages={setMessages} />
                   case 'spelling':
                     if (typeof message.content === 'string') {
                       const parsedContent = JSON.parse(message.content);
                       return <Spelling spellings={parsedContent.spellings} />;
+                    }
+                    break;
+                  case 'physics':
+                    if (typeof message.content === 'string') {
+                      const parsedContent = JSON.parse(message.content);
+                      return <PhysicsSimulator objects={parsedContent.objects} />;
                     }
                     break;
                   default:
