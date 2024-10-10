@@ -21,13 +21,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import deleteChat from "@/utils/deleteChat"
+import { useRouter } from "next/navigation"
 
 interface ChatHistoryProps {
-  history: Chat[]
+  history: Chat[],
+  userId: string
 }
 
-export default function ChatHistory({ history }: ChatHistoryProps) {
+export default function ChatHistory({ history, userId }: ChatHistoryProps) {
   const pathname = usePathname()
+  const router = useRouter()
 
   return (
     <div className="h-full bg-gray-50 p-4 flex flex-col">
@@ -75,7 +79,10 @@ export default function ChatHistory({ history }: ChatHistoryProps) {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => console.log('deleted')}>
+                              <AlertDialogAction onClick={async () => {
+                                await deleteChat(userId, chat.chatSessionId)
+                                router.refresh();
+                              }}>
                                 Continue
                               </AlertDialogAction>
                             </AlertDialogFooter>
