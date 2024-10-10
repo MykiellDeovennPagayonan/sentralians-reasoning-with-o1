@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react'
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -41,8 +40,8 @@ const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
 
   return (
     <div className="flex flex-col flex-grow items-center w-[250px] sm:w-[450px] md:w-[550px] justify-center">
-      <Card
-        className={`relative w-full max-w-md aspect-[4/3] cursor-pointer perspective-1000 transition-transform duration-500 ${isFlipped ? 'rotate-y-180' : ''}`}
+      <div
+        className={`relative w-full bg-white aspect-[4/3] rounded-lg cursor-pointer perspective-1000 transition-transform duration-500 ${isFlipped ? 'rotate-y-180' : ''}`}
         onClick={handleFlip}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
@@ -54,7 +53,7 @@ const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
           <div className={`absolute w-full h-full backface-hidden flex flex-col items-center justify-center p-6 ${isFlipped ? 'rotate-y-180 opacity-0' : ''}`}>
             <p className="text-base text-center">{currentFlashcard.definition}</p>
           </div>
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-sm text-muted-foreground">
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm text-muted-foreground">
             {currentIndex + 1} of {flashcards.length}
           </div>
           {isHovering && (
@@ -71,7 +70,7 @@ const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-2 bottom-2 opacity-70 hover:opacity-100"
+                className="absolute right-2 bottom-4 opacity-70 hover:opacity-100"
                 onClick={handleNext}
                 aria-label="Next card"
               >
@@ -80,7 +79,7 @@ const Flashcards: React.FC<FlashcardProps> = ({ flashcards }) => {
             </>
           )}
         </div>
-      </Card>
+      </div>
     </div>
   )
 };
