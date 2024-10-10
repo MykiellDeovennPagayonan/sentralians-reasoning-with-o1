@@ -90,7 +90,7 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                       break;
                     default:
                       return Array.isArray(message.content)
-                        ? message.content.map((content, subIndex) => {
+                        ? message.content.map((content) => {
 
                           if (typeof content === 'string') {
                             return content
