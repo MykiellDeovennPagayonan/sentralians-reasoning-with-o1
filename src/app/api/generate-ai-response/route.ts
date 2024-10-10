@@ -9,7 +9,10 @@ export async function POST(request: NextRequest) {
     const messages: ChatCompletionMessageParam[] | O1MessagesInput[] = body.filteredMessages;
 
     const response = await generateAIResponse(messages);
-    if (response.contentType === "quiz" || response.contentType === "ppt" || response.contentType == "flashcards") {
+
+    console.log(response)
+
+    if (response.contentType === "quiz" || response.contentType === "ppt" || response.contentType == "flashcards" || response.contentType == "spelling" || response.contentType == "canvas" || response.contentType == "image" || response.contentType == "physics") {
       return NextResponse.json({ content: response.content, contentType: response.contentType } as AIResponse, { status: 200 });
     }
 

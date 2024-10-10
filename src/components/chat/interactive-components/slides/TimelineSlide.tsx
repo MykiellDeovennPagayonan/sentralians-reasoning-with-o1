@@ -15,7 +15,7 @@ interface TimelineSlideProps {
 
 const TimelineSlide: React.FC<TimelineSlideProps> = ({ title, milestones }) => {
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center p-8 bg-gray-100">
+    <div className="w-full h-screen flex flex-col justify-center items-center p-8 bg-white">
       <h2 className="text-3xl font-bold mb-8">{title}</h2>
       <div className="w-full max-w-4xl">
         <div className="relative">

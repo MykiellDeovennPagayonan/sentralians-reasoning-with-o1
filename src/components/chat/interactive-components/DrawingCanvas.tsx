@@ -1,32 +1,42 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import p5 from 'p5';
-import axios from 'axios';
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import fetchGenerateAIResponse from '@/utils/fetchGenerateAIResponse';
+import saveImage from '@/utils/saveImage';
+import { GPT4oMessagesInput, O1MessagesInput } from '@/lib/types';
 
-const DrawingCanvas: React.FC = () => {
+interface DrawingCanvasProps {
+  messages: GPT4oMessagesInput[] | O1MessagesInput[];
+  setMessages: React.Dispatch<React.SetStateAction<GPT4oMessagesInput[] | O1MessagesInput[]>>;
+}
+
+const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
+  const p5InstanceRef = useRef<p5 | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && canvasRef.current) {
-      // Define the p5 sketch
       const sketch = (p: p5) => {
         let isDrawing = false;
         let previousX = 0;
         let previousY = 0;
 
         p.setup = () => {
-          // Create a canvas that fits the parent div
           const parentWidth = canvasRef.current!.clientWidth;
-          const canvas = p.createCanvas(parentWidth, 500);
+          const parentHeight = canvasRef.current!.clientHeight;
+          const canvas = p.createCanvas(parentWidth, parentHeight);
           canvas.parent(canvasRef.current!);
-          p.background(255); // White background
+          p.background(255);
         };
 
         p.draw = () => {
           if (isDrawing) {
-            p.stroke(0); // Black color for drawing
-            p.strokeWeight(2); // Thickness of the line
+            p.stroke(0);
+            p.strokeWeight(2);
             p.line(previousX, previousY, p.mouseX, p.mouseY);
             previousX = p.mouseX;
             previousY = p.mouseY;
@@ -52,19 +62,26 @@ const DrawingCanvas: React.FC = () => {
         };
       };
 
-      // Initialize the p5 sketch
-      const newP5 = new p5(sketch);
+      p5InstanceRef.current = new p5(sketch);
 
-      // Cleanup on component unmount
       return () => {
-        newP5.remove();
+        if (p5InstanceRef.current) {
+          p5InstanceRef.current.remove();
+        }
       };
     }
   }, []);
 
+  const resetCanvas = () => {
+    if (p5InstanceRef.current) {
+      p5InstanceRef.current.background(255);
+    } else {
+      alert('Canvas is not initialized yet.');
+    }
+  };
+
   const uploadImage = async () => {
     if (canvasRef.current) {
-      // Find the canvas element within the div
       const canvasElement = canvasRef.current.querySelector('canvas') as HTMLCanvasElement | null;
 
       if (!canvasElement) {
@@ -72,37 +89,54 @@ const DrawingCanvas: React.FC = () => {
         return;
       }
 
+      setUploading(true);
+
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvasElement.toBlob((b) => resolve(b), 'image/png');
+      });
+
+      if (!blob) {
+        alert('Failed to convert canvas to image.');
+        setUploading(false);
+        return;
+      }
+
+      const file = new File([blob], 'drawing.png', { type: 'image/png' });
+
+      const formData = new FormData();
+      formData.append('image', file);
+
       try {
-        // Convert the canvas to a Blob
-        const blob = await new Promise<Blob | null>((resolve) => {
-          canvasElement.toBlob((b) => resolve(b), 'image/png');
-        });
 
-        if (!blob) {
-          alert('Failed to convert canvas to image.');
-          return;
+        const imageUrl = await saveImage(formData);
+
+        const message: ChatCompletionMessageParam =
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: imageUrl
+              }
+            }
+          ]
         }
 
-        const file = new File([blob], 'drawing.png', { type: 'image/png' });
+        setMessages([...messages, message])
 
-        const formData = new FormData();
-        formData.append('image', file);
+        const reply = await fetchGenerateAIResponse([message])
 
-        const uploadResponse = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/upload`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        console.log(reply.content)
 
-        if (uploadResponse.status === 200) {
-          alert('Image uploaded successfully!');
-        } else {
-          console.error('Upload failed with status:', uploadResponse.status);
-          alert('Failed to upload image.');
-        }
+        setIsSuccessful(true)
+
+        alert('Image uploaded successfully!')
       } catch (error) {
         console.error('Error uploading image:', error);
         alert('An error occurred while uploading the image.');
+      } finally {
+        setUploading(false);
       }
     } else {
       alert('Canvas ref is not available.');
@@ -110,17 +144,28 @@ const DrawingCanvas: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-[600px] bg-gray-100 p-4 min-h-screen">
+    <div className="flex flex-col justify-center items-center w-[250px] sm:w-[450px] md:w-[550px] bg-white rounded-lg p-4 aspect-[1/1]">
       <div
         ref={canvasRef}
-        className="w-full max-w-3xl border-2 border-gray-300 shadow-md"
+        className="w-full aspect-square max-w-3xl border-2 border-gray-300"
       ></div>
-      <button
-        onClick={uploadImage}
-        className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-      >
-        Upload as PNG
-      </button>
+      <div className="mt-4 flex space-x-2">
+        {!isSuccessful && (
+          <button
+            onClick={uploadImage}
+            disabled={uploading}
+            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          >
+            {uploading ? 'Uploading...' : 'Upload Drawing'}
+          </button>
+        )}
+        <button
+          onClick={resetCanvas}
+          className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+        >
+          Reset Drawing
+        </button>
+      </div>
     </div>
   );
 };

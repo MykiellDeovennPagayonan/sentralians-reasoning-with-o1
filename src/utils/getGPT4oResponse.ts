@@ -15,7 +15,7 @@ const openai = new OpenAI({
   baseURL,
 });
 
-export default async function getGPT4oResponse(messages : ChatCompletionMessageParam[]) : Promise<AIResponse> {
+export default async function getGPT4oResponse(messages : ChatCompletionMessageParam[]) : Promise<AIResponse> {  
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: messages,
@@ -26,6 +26,10 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
     frequency_penalty: 0,
     presence_penalty: 0,
   })
+
+  if (response.choices[0].message.tool_calls) {
+    console.log(response.choices[0].message.tool_calls[0].function.arguments)
+  }
 
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_quiz") {
     const quiz = response.choices[0].message.tool_calls[0].function.arguments
@@ -41,6 +45,26 @@ export default async function getGPT4oResponse(messages : ChatCompletionMessageP
   if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_flashcards") {
     const flashcards = response.choices[0].message.tool_calls[0].function.arguments
     return {content: flashcards, contentType: "flashcards"};
+  }
+
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "draw_canvas") {
+    const flashcards = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: flashcards, contentType: "canvas"};
+  }
+  
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "image_upload") {
+    const flashcards = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: flashcards, contentType: "image"};
+  }
+    
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "create_spelling_quiz") {
+    const spelling = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: spelling, contentType: "spelling"};
+  }
+
+  if (response.choices[0].message.tool_calls && response.choices[0].message.tool_calls[0].function.name === "run_physics_simulation") {
+    const spelling = response.choices[0].message.tool_calls[0].function.arguments
+    return {content: spelling, contentType: "physics"};
   }
 
   return {content: response.choices[0].message.content as string};
