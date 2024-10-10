@@ -7,9 +7,14 @@ import Image from "next/image"
 import { Menu, X } from 'lucide-react'
 import { useState } from "react"
 
-export default function Navbar() {
+interface NavbarProps {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (open: boolean) => void;
+}
+
+export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  
+
   return (
     <nav className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,6 +30,13 @@ export default function Navbar() {
                 <circle cx="12" cy="12" r="10" />
               </svg>
             </Link>
+            <Button
+              variant="outline"
+              className="block ml-3 z-50 md:hidden"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+              Chat History
+            </Button>
             <div className="hidden md:block ml-10 space-x-4">
               <Link href="/" className="text-gray-600 hover:text-gray-900">Home</Link>
               <Link href="/" className="text-gray-600 hover:text-gray-900">Get Started</Link>
@@ -32,10 +44,10 @@ export default function Navbar() {
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6 space-x-4">
-            <Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link>
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link>
-            <Link href="/demo" className="text-gray-600 hover:text-gray-900">View Demo</Link>
-            <AuthButton />
+              <Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link>
+              <Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link>
+              <Link href="/demo" className="text-gray-600 hover:text-gray-900">View Demo</Link>
+              <AuthButton />
             </div>
           </div>
           <div className="-mr-2 flex md:hidden">
@@ -58,7 +70,7 @@ export default function Navbar() {
             <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Get Started</Link>
             <Link href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">About</Link>
             <Link href="/blog" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Blog</Link>
-            
+
           </div>
           <div className="pt-4 pb-3 border-t border-gray-200">
             <div className="px-2">
@@ -90,5 +102,4 @@ function AuthButton() {
       <Button variant="default" className="bg-black rounded-full text-white hover:bg-gray-800" onClick={() => signIn()}>Sign in</Button>
     </>
   )
-   
 }

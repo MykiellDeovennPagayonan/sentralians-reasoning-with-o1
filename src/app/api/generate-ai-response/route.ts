@@ -6,7 +6,7 @@ import { O1MessagesInput, AIResponse } from "@/lib/types";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const messages: ChatCompletionMessageParam[] | O1MessagesInput[] = body.messages;
+    const messages: ChatCompletionMessageParam[] | O1MessagesInput[] = body.filteredMessages;
 
     const response = await generateAIResponse(messages);
 

@@ -1,33 +1,6 @@
-import { Chat, PrismaClient } from '@prisma/client'
+import { Chat } from '@prisma/client'
 import { NextResponse } from 'next/server'
-
-const prisma = new PrismaClient()
-
-// gets the chat for the user with a specific session id
-// (this is the chat that the user is currently in)
-export async function GET(
-  request: Request,
-  { params }: { params: { userId: string, chatSessionId: string } }
-) {
-  try {
-    const chats = await prisma.chat.findUnique({
-      where: {
-        chatSessionId: params.chatSessionId
-      },
-      include: {
-        messages: {
-          include: {
-            content: true
-          }
-        }
-      }
-    })
-
-    return NextResponse.json(chats)
-  } catch (error) {
-    return NextResponse.json({ message: error }, { status: 500 })
-  }
-}
+import prisma from '@/lib/db';
 
 // user updates chat name
 // body should contain the new chat name
