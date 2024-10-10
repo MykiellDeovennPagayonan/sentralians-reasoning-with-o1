@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 import ChatLayout from "@/components/chat/ChatLayout";
 import prisma from "@/lib/db"
 import { getServerSession } from "next-auth";
