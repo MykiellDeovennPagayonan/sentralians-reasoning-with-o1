@@ -29,7 +29,7 @@ export default function AIChat() {
 
     try {
       const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
-      if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling' || aiResponse.contentType == "canvas" || aiResponse.contentType == "image") {
+      if (aiResponse.contentType === 'quiz' || aiResponse.contentType === 'ppt' || aiResponse.contentType == 'flashcards' || aiResponse.contentType == 'spelling' || aiResponse.contentType == "canvas" || aiResponse.contentType == "image" || aiResponse.contentType == "physics") {
         const newAiMessage: O1MessagesInput | GPT4oMessagesInput = { role: 'assistant', content: aiResponse.content, componentMessageType: aiResponse.contentType }
         setMessages(prevMessages => [...prevMessages, newAiMessage])
         return
