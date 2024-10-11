@@ -40,7 +40,7 @@ const createPhysicsSimulator: ChatCompletionTool = {
               },
               position: {
                 type: "object",
-                description: "The starting position of the object.",
+                description: "The starting position of the object. screen size is only 350 x 230 pixels. make sure the objects are not in the direct edges, give a 30 pixel allowance",
                 properties: {
                   x: {
                     type: "number",
