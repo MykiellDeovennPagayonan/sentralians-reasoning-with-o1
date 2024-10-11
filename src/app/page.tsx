@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import Navbar from "@/components/layout/Navbar"
 import { FlipWords } from "@/components/ui/flip-words"
@@ -5,10 +6,11 @@ import { useRef } from "react"
 import { Highlighted } from "@/components/ui/hero-highlight"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
-
+import { useRouter } from "next/navigation"
 export default function Home() {
   const words = ["Enhanced Learning", "Better Learning", "Engaged Learning", "Easier Learning"]
   const videoRef = useRef<HTMLVideoElement>(null)
+  const router = useRouter()
 
   const handleVideoEnd = () => {
     if (videoRef.current) {
@@ -36,10 +38,10 @@ export default function Home() {
             <FlipWords words={words} className='text-blue-800' />
           </h1>
           <div className="w-full flex">
-            <button className="mt-4 md:mt-6 lg:mt-8 px-5 md:px-6 lg:px-8 xl:px-10 py-1 lg:py-2 text-lg md:text-lg lg:text-xl bg-blue-900 text-white font-semibold rounded-full hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg mx-auto lg:mx-0"
-            // onClick={""}
+            <button className="mt-4 md:mt-6 lg:mt-8 px-5 md:px-6 lg:px-8 xl:px-10 py-1 lg:py-2 text-lg md:text-lg lg:text-xl bg-blue-900 text-white font-semibold rounded-full hover:bg-blue-700 transition-all duration-100 transform hover:scale-105 shadow-lg mx-auto lg:mx-0"
+              onClick={() => router.push("/chat")}
             >
-              Join us
+              get started
             </button>
           </div>
         </div>
