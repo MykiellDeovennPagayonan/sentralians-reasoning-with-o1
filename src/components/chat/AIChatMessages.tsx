@@ -128,7 +128,7 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                           <ReactMarkdown
                           components={{
                             h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-6 mb-2" {...props} />,
-                            p: ({ node, ...props }) => <p className="mt-4" {...props} />,
+                            p: ({ node, ...props }) => <p className="mt-0" {...props} />,
                             strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
                             ul: ({ node, ...props }) => <ul className="list-disc list-inside ml-4 my-2" {...props} />,
                             li: ({ node, ...props }) => <li className="my-1" {...props} />,

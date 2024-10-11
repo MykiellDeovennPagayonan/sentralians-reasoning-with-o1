@@ -35,7 +35,7 @@ export default function ChatHistory({ history, userId }: ChatHistoryProps) {
 
   return (
     <div className="h-full bg-gray-50 p-4 flex flex-col">
-      <Link href={"/"} className="mb-4">
+      <Link href={"/chat"} className="mb-4">
         <Button className="w-full flex items-center gap-2">
           <PlusCircle size={20} />
           New Chat
