@@ -1,13 +1,12 @@
 "use client"
 import Navbar from "@/components/layout/Navbar"
 import { FlipWords } from "@/components/ui/flip-words"
-import { useState, useRef } from "react"
+import { useRef } from "react"
 import { Highlighted } from "@/components/ui/hero-highlight"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const words = ["Enhanced Learning", "Better Learning", "Engaged Learning", "Easier Learning"]
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -19,28 +18,30 @@ export default function Home() {
 
   return (
     <div className="w-screen flex flex-col min-h-screen">
-      <Navbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+      <Navbar />
       <section className="flex flex-col lg:flex-row w-screen bg-gray-100 px-6 md:px-8 lg:px-12 xl:px-20 py-20 xl:gap-16">
         <div className="w-full lg:w-1/2">
-          <h1 className="text-5xl sm:text-6xl font-bold mb-2 relative">
+          <h1 className="text-5xl sm:text-6xl font-bold mb-2 relative text-center lg:text-left">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-950 via-blue-950 to-yellow-500 animate-gradient-x">
               BricolAI
             </span>
           </h1>
-          <p className="text-2xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl mt-8 font-bold">
+          <p className="text-2xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl mt-8 font-bold text-center lg:text-left">
             <Highlighted className="text-black dark:text-white">
               Interactive
             </Highlighted> {" "}
             Chat-Based UI components for
           </p>
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-bold mt-1">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-bold mt-1 text-center lg:text-left">
             <FlipWords words={words} className='text-blue-800' />
           </h1>
-          <button className="mt-4 md:mt-6 lg:mt-8 px-5 md:px-6 lg:px-8 xl:px-10 py-1 lg:py-2 text-lg md:text-lg lg:text-xl bg-blue-900 text-white font-semibold rounded-full hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
-          // onClick={""}
-          >
-            Join us
-          </button>
+          <div className="w-full flex">
+            <button className="mt-4 md:mt-6 lg:mt-8 px-5 md:px-6 lg:px-8 xl:px-10 py-1 lg:py-2 text-lg md:text-lg lg:text-xl bg-blue-900 text-white font-semibold rounded-full hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg mx-auto lg:mx-0"
+            // onClick={""}
+            >
+              Join us
+            </button>
+          </div>
         </div>
         <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
           <div className="relative group/card w-full rounded-2xl aspect-[16/9] border-2 border-gray-400 shadow-xl">
@@ -62,7 +63,7 @@ export default function Home() {
             <div className="relative group/card w-full rounded-2xl aspect-[16/9] border-2 border-gray-400 shadow-xl">
               <video
                 ref={videoRef}
-                src="/videos/draw-feature.mp4"
+                src="/videos/basic-features.mp4"
                 className="object-cover rounded-2xl w-full h-full"
                 autoPlay
                 muted
@@ -72,21 +73,27 @@ export default function Home() {
           </div>
           <div className="w-full lg:w-1/2">
             <h1 className="text-3xl sm:text-4xl lg:mt-8 text-center lg:text-left lg:ml-16 font-semibold mb-2 relative">
-              BricolAI
+              Interactive study components
             </h1>
+            <p className="text-base sm:text-xl lg:text-xl xl:text-2xl mt-4 text-center lg:text-left lg:ml-16">
+              Engage with presentations, flashcards, quizzes, and other interactive components designed to make you learning time, more efficient.
+            </p>
           </div>
         </div>
         <div className="flex flex-col lg:flex-row w-full">
           <div className="w-full lg:w-1/2">
             <h1 className="text-3xl sm:text-4xl lg:mt-8 text-center lg:text-left lg:ml-16 font-semibold mb-2 relative">
-              BricolAI
+              Advanced AI canvas
             </h1>
+            <p className="text-base pr-8 sm:text-xl lg:text-xl xl:text-2xl mt-4 text-center lg:text-left lg:ml-16">
+              Create, draw, and illustrate complex problems for BricolAI to solve and explain.
+            </p>
           </div>
           <div className="w-3/4 lg:w-1/2 mt-8 lg:mt-0 mx-auto">
             <div className="relative group/card w-full rounded-2xl aspect-[16/9] border-2 border-gray-400 shadow-xl">
               <video
                 ref={videoRef}
-                src="/videos/basic-features.mp4"
+                src="/videos/draw-feature.mp4"
                 className="object-cover rounded-2xl w-full h-full"
                 autoPlay
                 muted
@@ -110,8 +117,11 @@ export default function Home() {
           </div>
           <div className="w-full lg:w-1/2">
             <h1 className="text-3xl sm:text-4xl lg:mt-8 text-center lg:text-left lg:ml-16 font-semibold mb-2 relative">
-              BricolAI
+              Physics Simulator
             </h1>
+            <p className="text-base sm:text-xl lg:text-xl xl:text-2xl mt-4 text-center lg:text-left lg:ml-16">
+              Experience real-time physics simulations to understand complex concepts through interactive and visual experimentation.
+            </p>
           </div>
         </div>
       </section>
