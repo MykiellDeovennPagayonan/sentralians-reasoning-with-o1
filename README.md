@@ -16,22 +16,23 @@
 <br>
 
 ## Features
-Interactive Chat-Based UI components that include:
-
-* Powerpoints, Flashcards, and Quizzes!
-![basic](https://github.com/user-attachments/assets/14a8390f-2a50-4362-a6b4-716fcd649d61)
+🧠 <strong>Powerpoints, Flashcards, and Quizzes!</strong><br>
+Turn facts into fun! Simply make a request in order reinforce your knowledge!
 <video src="https://github.com/user-attachments/assets/14a8390f-2a50-4362-a6b4-716fcd649d61" controls="controls" style="max-width: 730px;">
 </video>
 
-* Spelling Challenges
+🔤 <strong>Spelling Challenges</strong><br>
+Hone your spelling skills with any topic you want!
 <video src="https://github.com/user-attachments/assets/c9a08cff-7753-458d-a058-17d1ee714321" controls="controls" style="max-width: 730px;">
 </video>
 
-* Drawing board on a canvas
+🎨 <strong>Drawing board on a canvas</strong><br>
+Visualize ideas or physics problems on a canvas!
 <video src="https://github.com/user-attachments/assets/6b34a8ec-166e-459c-845b-e41303a50b91" controls="controls" style="max-width: 730px;">
 </video>
 
-* Physics-based simulations!
+⚙️ <strong>Physics-based simulations</strong><br>
+Experience science in action, watch the laws of physics come to life!
 <video src="https://github.com/user-attachments/assets/42030fc3-e23b-45e9-9938-a642b3fcf5d4" controls="controls" style="max-width: 730px;">
 </video>
 
