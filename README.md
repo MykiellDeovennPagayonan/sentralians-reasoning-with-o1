@@ -18,12 +18,23 @@
 ## Features
 Interactive Chat-Based UI components that include:
 
-* Powerpoint Presentations
-* Quizzes
-* Flashcards
+* Powerpoints, Flashcards, and Quizzes!
+![basic](https://github.com/user-attachments/assets/14a8390f-2a50-4362-a6b4-716fcd649d61)
+<video src="https://github.com/user-attachments/assets/14a8390f-2a50-4362-a6b4-716fcd649d61" controls="controls" style="max-width: 730px;">
+</video>
+
 * Spelling Challenges
+<video src="https://github.com/user-attachments/assets/c9a08cff-7753-458d-a058-17d1ee714321" controls="controls" style="max-width: 730px;">
+</video>
+
 * Drawing board on a canvas
+<video src="https://github.com/user-attachments/assets/6b34a8ec-166e-459c-845b-e41303a50b91" controls="controls" style="max-width: 730px;">
+</video>
+
 * Physics-based simulations!
+<video src="https://github.com/user-attachments/assets/42030fc3-e23b-45e9-9938-a642b3fcf5d4" controls="controls" style="max-width: 730px;">
+</video>
+
 
 ## Getting Started
 
