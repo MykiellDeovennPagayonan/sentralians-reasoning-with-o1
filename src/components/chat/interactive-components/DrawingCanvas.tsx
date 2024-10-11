@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { UploadCloud, RotateCcw, Download, Eraser, Paintbrush } from 'lucide-react'
+import { UploadCloud, RotateCcw, Eraser, Paintbrush } from 'lucide-react'
 import fetchGenerateAIResponse from '@/utils/fetchGenerateAIResponse'
 import saveImage from '@/utils/saveImage'
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
@@ -16,6 +16,7 @@ interface DrawingCanvasProps {
 
 const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [color, setColor] = useState('#000000')
   const [brushSize, setBrushSize] = useState(5)
@@ -23,14 +24,26 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   const [uploading, setUploading] = useState(false)
   const [isSuccessful, setIsSuccessful] = useState(false)
 
-  useEffect(() => {
+  const resizeCanvas = () => {
     const canvas = canvasRef.current
-    if (canvas) {
+    const container = containerRef.current
+    if (canvas && container) {
+      const { width, height } = container.getBoundingClientRect()
+      canvas.width = width
+      canvas.height = height
       const ctx = canvas.getContext('2d')
       if (ctx) {
         ctx.fillStyle = 'white'
         ctx.fillRect(0, 0, canvas.width, canvas.height)
       }
+    }
+  }
+
+  useEffect(() => {
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+    return () => {
+      window.removeEventListener('resize', resizeCanvas)
     }
   }, [])
 
@@ -53,14 +66,18 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (ctx && canvas) {
+      const rect = canvas.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+
       ctx.lineWidth = brushSize
       ctx.lineCap = 'round'
       ctx.strokeStyle = tool === 'eraser' ? 'white' : color
 
-      ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      ctx.lineTo(x, y)
       ctx.stroke()
       ctx.beginPath()
-      ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      ctx.moveTo(x, y)
     }
   }
 
@@ -70,17 +87,6 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
     if (ctx && canvas) {
       ctx.fillStyle = 'white'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-    }
-  }
-
-  const downloadDrawing = () => {
-    const canvas = canvasRef.current
-    if (canvas) {
-      const image = canvas.toDataURL('image/png')
-      const link = document.createElement('a')
-      link.href = image
-      link.download = 'drawing.png'
-      link.click()
     }
   }
 
@@ -99,8 +105,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
       try {
         const imageUrl = await saveImage(formData)
 
-        const message: ChatCompletionMessageParam =
-        {
+        const message: ChatCompletionMessageParam = {
           role: "user",
           content: [
             {
@@ -116,11 +121,14 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
 
         const reply = await fetchGenerateAIResponse([message])
 
-        console.log(reply.content)
+        const newAiMessage: ChatCompletionMessageParam = {
+          role: "assistant",
+          content: reply.content
+        }
+
+        setMessages([...messages, newAiMessage])
 
         setIsSuccessful(true)
-
-        alert('Image uploaded successfully!')
       } catch (error) {
         console.error('Error uploading image:', error)
         alert('An error occurred while uploading the image.')
@@ -133,16 +141,14 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4 p-4 bg-gray-100 rounded-lg shadow-lg">
-      <div className="relative">
+    <div className="flex flex-col items-center space-y-4 p-4 w-[250px] sm:w-[450px] md:w-[550px] bg-gray-100 rounded-lg shadow-lg">
+      <div ref={containerRef} className="relative w-full aspect-square md:aspect-video">
         <canvas
           ref={canvasRef}
-          width={500}
-          height={500}
           onMouseDown={startDrawing}
           onMouseUp={stopDrawing}
           onMouseMove={draw}
-          className="border-4 border-gray-300 rounded-lg shadow-inner bg-white"
+          className="border-4 border-gray-300 rounded-lg shadow-inner bg-white w-full h-full"
         />
         <div className="absolute bottom-2 left-2 bg-white p-2 rounded-md shadow">
           <input
@@ -153,7 +159,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
           />
         </div>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap justify-center space-x-2">
         <Button onClick={() => setTool('brush')} variant={tool === 'brush' ? 'default' : 'outline'}>
           <Paintbrush className="w-4 h-4 mr-2" />
           Brush
@@ -173,24 +179,15 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
         />
         <span className="text-sm font-medium w-8">{brushSize}</span>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap justify-center space-x-2">
         <Button onClick={clearCanvas} variant="destructive">
           <RotateCcw className="w-4 h-4 mr-2" />
           Reset
         </Button>
-        <Button onClick={downloadDrawing} variant="outline">
-          <Download className="w-4 h-4 mr-2" />
-          Download
-        </Button>
-        {!isSuccessful && (
-          <Button onClick={uploadImage} variant="outline" disabled={uploading}>
+        <Button onClick={uploadImage} variant="outline" disabled={uploading || isSuccessful}>
             <UploadCloud className="w-4 h-4 mr-2" />
-            {uploading ? 'Uploading...' : 'Upload'}
+            {uploading ? 'Submitting...' : 'Submit'}
           </Button>
-        )}
-        {isSuccessful && (
-          <span className="text-green-500 font-medium">Uploaded Successfully!</span>
-        )}
       </div>
     </div>
   )

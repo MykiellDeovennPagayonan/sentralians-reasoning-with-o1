@@ -1,9 +1,9 @@
 'use client'
 
 import { SendIcon } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { useRouter } from 'next/navigation'
 import { GPT4oMessagesInput, O1MessagesInput } from '@/lib/types'
 import AIChatMessages from './AIChatMessages'
@@ -15,12 +15,28 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
   const [messages, setMessages] = useState<(GPT4oMessagesInput | O1MessagesInput)[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [rows, setRows] = useState(1)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSubmit(e)
+    }
+  }
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+      setRows(textareaRef.current.rows)
+    }
+  }, [input])
 
   const router = useRouter()
 
   useEffect(() => {
     if (initialMessages) {
-      // Rename messageType to componentMessageType and narrow its type
       const updatedMessages: (GPT4oMessagesInput | O1MessagesInput)[] = initialMessages.map((message) => {
         if ('messageType' in message) {
           const { messageType, ...rest } = message;
@@ -40,10 +56,9 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
   }, [initialMessages]);
 
 
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     setInput(event.target.value)
   }
-
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -57,7 +72,7 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
     if (!chatId) {
       try {
         const chatSessionId = await createChat(userId, input.trim(), newUserMessage)
-        
+
         const aiResponse = await fetchGenerateAIResponse([...messages, newUserMessage])
         router.push(`/chat/${chatSessionId}`)
         router.refresh()
@@ -73,7 +88,7 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
 
         setMessages(prevMessages => [...prevMessages, newAiMessage])
         await submitMessage(userId, chatSessionId, newAiMessage)
-    
+
         return
       } catch (error) {
         console.error('Error generating AI response:', error)
@@ -112,15 +127,17 @@ export default function AIChat({ initialMessages, userId, chatId }: { initialMes
 
   return (
     <div className="flex flex-col w-full max-w-3xl h-full mx-auto px-4">
-      <AIChatMessages messages={messages} setMessages={setMessages}/>
+      <AIChatMessages messages={messages} setMessages={setMessages} />
       <form onSubmit={handleSubmit} className="p-4 bg-white border-2 border-black border-b-0 rounded-t-lg">
         <div className="flex space-x-2">
-          <Input
+          <Textarea
+            ref={textareaRef}
             value={input}
             onChange={handleInputChange}
-            placeholder="Type your message here..."
-            className="flex-grow"
-            disabled={isLoading}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
+            rows={rows}
+            className="min-h-[40px] max-h-[200px] resize-none"
           />
           <Button type="submit" disabled={isLoading}>
             <SendIcon className="h-4 w-4" />

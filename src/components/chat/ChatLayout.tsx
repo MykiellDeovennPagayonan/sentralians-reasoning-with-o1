@@ -32,15 +32,7 @@ export default function ChatLayout({ chatHistory, userId, messages, chatId }: { 
           </ResizablePanel>
           <ResizableHandle className="hidden md:flex" />
           <ResizablePanel defaultSize={80} className="w-full md:w-auto">
-            <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel defaultSize={100}>
-                <AIChat userId={userId} initialMessages={messages} chatId={chatId} />
-              </ResizablePanel>
-              <ResizableHandle />
-              <ResizablePanel defaultSize={0}>
-                <div className="w-full h-full bg-black"></div>
-              </ResizablePanel>
-            </ResizablePanelGroup>
+            <AIChat userId={userId} initialMessages={messages} chatId={chatId} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
