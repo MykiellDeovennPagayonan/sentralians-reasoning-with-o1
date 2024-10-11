@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
-import { UploadCloud, RotateCcw, Download, Eraser, Paintbrush } from 'lucide-react'
+import { UploadCloud, RotateCcw, Eraser, Paintbrush } from 'lucide-react'
 import fetchGenerateAIResponse from '@/utils/fetchGenerateAIResponse'
 import saveImage from '@/utils/saveImage'
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
@@ -24,7 +24,6 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   const [uploading, setUploading] = useState(false)
   const [isSuccessful, setIsSuccessful] = useState(false)
 
-  // Function to resize the canvas to match the container
   const resizeCanvas = () => {
     const canvas = canvasRef.current
     const container = containerRef.current
@@ -91,17 +90,6 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
     }
   }
 
-  const downloadDrawing = () => {
-    const canvas = canvasRef.current
-    if (canvas) {
-      const image = canvas.toDataURL('image/png')
-      const link = document.createElement('a')
-      link.href = image
-      link.download = 'drawing.png'
-      link.click()
-    }
-  }
-
   const uploadImage = async () => {
     const canvas = canvasRef.current
     if (canvas) {
@@ -133,11 +121,14 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
 
         const reply = await fetchGenerateAIResponse([message])
 
-        console.log(reply.content)
+        const newAiMessage: ChatCompletionMessageParam = {
+          role: "assistant",
+          content: reply.content
+        }
+
+        setMessages([...messages, newAiMessage])
 
         setIsSuccessful(true)
-
-        alert('Image uploaded successfully!')
       } catch (error) {
         console.error('Error uploading image:', error)
         alert('An error occurred while uploading the image.')
@@ -150,7 +141,7 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4 p-4 bg-gray-100 rounded-lg shadow-lg w-full max-w-3xl">
+    <div className="flex flex-col items-center space-y-4 p-4 w-[250px] sm:w-[450px] md:w-[550px] bg-gray-100 rounded-lg shadow-lg">
       <div ref={containerRef} className="relative w-full aspect-square md:aspect-video">
         <canvas
           ref={canvasRef}
@@ -193,19 +184,10 @@ const DrawingCanvas: React.FC<DrawingCanvasProps> = ({ messages, setMessages }) 
           <RotateCcw className="w-4 h-4 mr-2" />
           Reset
         </Button>
-        <Button onClick={downloadDrawing} variant="outline">
-          <Download className="w-4 h-4 mr-2" />
-          Download
-        </Button>
-        {!isSuccessful && (
-          <Button onClick={uploadImage} variant="outline" disabled={uploading}>
+        <Button onClick={uploadImage} variant="outline" disabled={uploading || isSuccessful}>
             <UploadCloud className="w-4 h-4 mr-2" />
-            {uploading ? 'Uploading...' : 'Upload'}
+            {uploading ? 'Submitting...' : 'Submit'}
           </Button>
-        )}
-        {isSuccessful && (
-          <span className="text-green-500 font-medium">Uploaded Successfully!</span>
-        )}
       </div>
     </div>
   )

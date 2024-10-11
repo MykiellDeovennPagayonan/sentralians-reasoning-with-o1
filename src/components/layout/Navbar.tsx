@@ -20,7 +20,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: NavbarProps)
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold">
+            <Link href="/" className="text-xl font-bold items-center space-x-1 flex flex-row">
               <span className="sr-only">Home</span>
               <svg
                 viewBox="0 0 24 24"
@@ -29,6 +29,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: NavbarProps)
               >
                 <circle cx="12" cy="12" r="10" />
               </svg>
+              <span>BricolAI</span>
             </Link>
             <Button
               variant="outline"
@@ -37,16 +38,10 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: NavbarProps)
             >
               Chat History
             </Button>
-            <div className="hidden md:block ml-10 space-x-4">
-              <Link href="/" className="text-gray-600 hover:text-gray-900">Home</Link>
-              <Link href="/" className="text-gray-600 hover:text-gray-900">Get Started</Link>
-            </div>
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6 space-x-4">
-              <Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link>
-              <Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link>
-              <Link href="/demo" className="text-gray-600 hover:text-gray-900">View Demo</Link>
+            <Link href="/" className="text-gray-600 hover:text-gray-900 mr-4">Home</Link>
               <AuthButton />
             </div>
           </div>
