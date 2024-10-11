@@ -19,13 +19,7 @@ export default function Navbar({ isSidebarOpen, setIsSidebarOpen }: NavbarProps)
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold items-center space-x-1 flex flex-row">
               <span className="sr-only">Home</span>
-              <svg
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-8 h-8"
-              >
-                <circle cx="12" cy="12" r="10" />
-              </svg>
+              <Image className="rounded-full hidden md:block" src={"/logo.png"} alt="" width={35} height={35} />
               <span>BricolAI</span>
             </Link>
             {(isSidebarOpen !== undefined && setIsSidebarOpen !== undefined) &&
