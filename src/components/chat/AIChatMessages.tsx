@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ScrollArea } from "../ui/scroll-area";
 import { GPT4oMessagesInput, O1MessagesInput } from "@/lib/types";
 import Quiz from "./interactive-components/quiz";
@@ -7,6 +8,7 @@ import ImageUploader from "./interactive-components/ImageUploader";
 import DrawingCanvas from "./interactive-components/DrawingCanvas";
 import Spelling from "./interactive-components/spelling";
 import PhysicsSimulator from "./interactive-components/PhysicsSimulator";
+import ReactMarkdown from 'react-markdown';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React from "react";
 
@@ -90,10 +92,24 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                       break;
                     default:
                       return Array.isArray(message.content)
-                        ? message.content.map((content) => {
+                        ? message.content.map((content, secondaryIndex) => {
 
                           if (typeof content === 'string') {
-                            return content
+
+                            return (
+                              <ReactMarkdown
+                                key={secondaryIndex}
+                                components={{
+                                  h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-6 mb-2" {...props} />,
+                                  p: ({ node, ...props }) => <p className="my-4" {...props} />,
+                                  strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                                  ul: ({ node, ...props }) => <ul className="list-disc list-inside ml-4 my-2" {...props} />,
+                                  li: ({ node, ...props }) => <li className="my-1" {...props} />,
+                                }}
+                              >
+                                {content}
+                              </ReactMarkdown>
+                            )
                           }
 
                           // const contentExtracted = JSON.parse(content);
@@ -108,7 +124,19 @@ export default function AIChatMessages({ messages, setMessages }: AIChatMessages
                           //   </div>
                           // )
                         })
-                        : <div>{message.content}</div>;
+                        : (
+                          <ReactMarkdown
+                          components={{
+                            h3: ({ node, ...props }) => <h3 className="text-xl font-bold mt-6 mb-2" {...props} />,
+                            p: ({ node, ...props }) => <p className="mt-4" {...props} />,
+                            strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                            ul: ({ node, ...props }) => <ul className="list-disc list-inside ml-4 my-2" {...props} />,
+                            li: ({ node, ...props }) => <li className="my-1" {...props} />,
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                        );
                   }
                 })()
               ) : (
