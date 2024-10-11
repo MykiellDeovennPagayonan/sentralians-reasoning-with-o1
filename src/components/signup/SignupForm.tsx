@@ -3,13 +3,12 @@
 import { Input } from '@/components/ui/input';
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from 'next-auth/react';
 import { SignupSchema } from '@/lib/schemas/signup';
 
 export default function SignupForm() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = "/chat"
   const router = useRouter();
 
   const [name, setName] = useState('');

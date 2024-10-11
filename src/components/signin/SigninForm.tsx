@@ -7,15 +7,13 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 
 import { FormSchema } from "@/lib/schemas/formSchema";
 
 type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginForm() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = "/chat"
   const {
     register,
     handleSubmit,

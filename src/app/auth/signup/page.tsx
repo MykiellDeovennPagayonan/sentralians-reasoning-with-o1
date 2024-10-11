@@ -5,20 +5,18 @@ import Image from "next/image"
 import { signIn } from "next-auth/react"
 import SignupBanner from "@/components/signup/SignupBanner"
 import SignupForm from "@/components/signup/SignupForm"
-import { useSearchParams } from "next/navigation"
 
 export default function RegisterPage() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = "/chat"
 
   return (
     <div className="flex min-h-screen bg-white">
       <div className="flex flex-col justify-center w-full max-w-md p-6 mx-auto lg:max-w-2xl lg:w-1/2">
         <div className="flex items-center mb-8">
-          <h1 className="text-2xl font-bold text-blue-600">App name</h1>
+          <h1 className="text-2xl font-bold text-blue-600">BricolAI</h1>
         </div>
         <h2 className="text-3xl font-bold mb-2">Create an Account</h2>
-        <p className="text-gray-600 mb-8">Sign up to start managing your tasks efficiently</p>
+        <p className="text-gray-600 mb-8">Sign up and start learning with interactive UI components</p>
 
         <SignupForm />
         
