@@ -6,9 +6,7 @@
 
 This guide is for developers looking to set up BricolAi on their local machine. Please follow the steps below carefully.
 
-```bash
 ### 1. Install Dependencies
-```
 
 Make sure you are in the root folder, then run the following command to install all necessary dependencies:
 
