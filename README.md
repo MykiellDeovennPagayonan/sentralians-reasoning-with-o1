@@ -1,4 +1,4 @@
-<h1 align='center'>BricolAI</h2>
+<h1 align='center'>BricolAI</h1>
 
 <p align='center'>
 <strong>BricolAI</strong> is an AI-powered educational platform that enhances learning through interactivity. It generates custom flashcards, quizzes, physics simulations, and math problem visualizations, providing an engaging, real-time learning experience.
