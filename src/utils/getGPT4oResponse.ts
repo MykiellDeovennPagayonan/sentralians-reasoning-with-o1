@@ -6,13 +6,10 @@ import { AIResponse } from "@/lib/types";
 
 dotenv.config();
 
-const apiKey = process.env.AIML_API_KEY;
-
-const baseURL = "https://api.aimlapi.com/v1";
+const apiKey = process.env.OPENAI_API_KEY;
 
 const openai = new OpenAI({
   apiKey,
-  baseURL,
 });
 
 export default async function getGPT4oResponse(messages : ChatCompletionMessageParam[]) : Promise<AIResponse> {  

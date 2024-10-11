@@ -5,6 +5,8 @@ export default function selectAIModel(messageInput: GPT4oMessagesInput[] | O1Mes
       throw new Error("Message input array is empty");
   }
 
+  // defaulted to gpt-4o for launched verion only
+
   return "gpt-4o";
 
 //   const firstMessage = messageInput[0];

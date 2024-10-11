@@ -4,18 +4,16 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import LoginForm from "@/components/signin/SigninForm"
 import { signIn } from "next-auth/react"
-import SignInBanner from "@/components/signup/SignupBanner"
-import { useSearchParams } from "next/navigation"
+import SignInBanner from "@/components/signin/SigninBanner"
 
 export default function LoginPage() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = "/chat"
 
   return (
     <div className="flex min-h-screen bg-white">
       <div className="flex flex-col justify-center w-full max-w-md p-6 mx-auto lg:max-w-2xl lg:w-1/2">
         <div className="flex items-center mb-8">
-          <h1 className="text-2xl font-bold text-blue-600">App name</h1>
+          <h1 className="text-2xl font-bold text-blue-600">BricolAI</h1>
         </div>
         <h2 className="text-3xl font-bold mb-2">Welcome Back!</h2>
         <p className="text-gray-600 mb-8">Please enter login details below</p>
