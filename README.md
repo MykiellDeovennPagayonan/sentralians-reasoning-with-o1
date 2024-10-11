@@ -1,6 +1,22 @@
-# BricolAi
+<h1 align='center'>BricolAI</h1>
 
-**BricolAi** is an AI-powered educational platform that enhances learning through interactivity. It generates custom flashcards, quizzes, physics simulations, and math problem visualizations, providing an engaging, real-time learning experience.
+<p align='center'>
+<strong>BricolAI</strong> is an AI-powered educational platform that enhances learning through interactivity. It generates custom flashcards, quizzes, physics simulations, and math problem visualizations, providing an engaging, real-time learning experience.
+<br><br>
+
+<p align='center'>
+<i>Created by: team SEntralians</i>
+<br>
+
+## Features
+Interactive Chat-Based UI components that include:
+
+* Powerpoint Presentations
+* Quizzes
+* Flashcards
+* Spelling Challenges
+* Drawing board on a canvas
+* Physics-based simulations!
 
 ## Getting Started
 
@@ -39,11 +55,13 @@ AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
 
 ### 3. Database Setup
 
-To migrate the database schema with Prisma, run:
+To push the schema into your MongoDB cluster, run:
 
 ```bash
-npx prisma generate
+npx prisma db push
 ```
+
+It is recommended to use MongoDB Atlas for hosting your clusters. Check out the official [MongoDB Atlas](https://www.mongodb.com/docs/atlas/) documentation for more info.
 
 ### 4. Start Development Server
 
