@@ -1,6 +1,6 @@
 <p align="center">
   <br>
-  <img width="200" src="https://github.com/MykiellDeovennPagayonan/sentralians-reasoning-with-o1/blob/master/public/logo.png" alt="logo">
+  <img width="200" src="https://github.com/MykiellDeovennPagayonan/sentralians-reasoning-with-o1/blob/a553c70a06aba1e7a951241ce513340989138f41/public/logo.png" alt="logo">
   <br>
   <br>
 </p>
